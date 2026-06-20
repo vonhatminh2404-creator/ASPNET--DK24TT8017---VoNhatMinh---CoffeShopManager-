@@ -1,0 +1,179 @@
+﻿@model IEnumerable<CoffeeShopManager.Models.DonHang>
+
+@{
+    ViewData["Title"] = "Sổ Lệnh Điều Phối - BonFire";
+}
+
+<style>
+    @@import url('https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&family=Playfair+Display:wght@700&display=swap');
+
+    .order-board {
+        font-family: 'Courier Prime', monospace;
+        background-color: #F4F2EB;
+        padding: 30px;
+        border: 4px solid #36453B;
+        min-height: 80vh;
+        box-shadow: 10px 10px 0px #36453B;
+    }
+
+    .order-header {
+        font-family: 'Playfair Display', serif;
+        color: #8B2F29;
+        text-align: center;
+        border-bottom: 3px double #36453B;
+        padding-bottom: 20px;
+        margin-bottom: 30px;
+        letter-spacing: 1px;
+    }
+
+    .order-card {
+        background-color: #fff;
+        border: 2px solid #36453B;
+        padding: 20px;
+        margin-bottom: 25px;
+        position: relative;
+        box-shadow: 5px 5px 0px rgba(54, 69, 59, 0.15);
+    }
+
+    /* Phong cách dải hóa đơn hiển thị món ăn/đồ uống bên trong đơn hàng */
+    .receipt-items {
+        background-color: #FAF9F5;
+        border: 1px dashed #36453B;
+        padding: 12px;
+        margin: 15px 0;
+        border-radius: 4px;
+        position: relative;
+    }
+
+        .receipt-items::before {
+            content: "ITEMS LIST";
+            position: absolute;
+            top: -10px;
+            left: 15px;
+            background: #8B2F29;
+            color: #fff;
+            font-size: 0.7rem;
+            padding: 2px 8px;
+            font-weight: bold;
+        }
+
+    .item-row {
+        display: flex;
+        justify-content: space-between;
+        border-bottom: 1px dotted #ccc;
+        padding: 4px 0;
+        font-size: 0.95rem;
+    }
+
+    .status-badge {
+        padding: 4px 12px;
+        font-weight: bold;
+        text-transform: uppercase;
+        font-size: 0.75rem;
+        border: 2px solid #36453B;
+    }
+
+    .status-pending {
+        background-color: #FFECB3;
+        color: #7F5F00;
+        border-color: #FFB300;
+    }
+
+    .status-making {
+        background-color: #B3E5FC;
+        color: #0288D1;
+        border-color: #0288D1;
+    }
+
+    .status-done {
+        background-color: #C8E6C9;
+        color: #2E7D32;
+        border-color: #2E7D32;
+    }
+
+    .btn-bonfire {
+        border: 2px solid #36453B;
+        color: #36453B;
+        background: transparent;
+        font-weight: bold;
+        padding: 6px 16px;
+        text-decoration: none;
+        font-size: 0.8rem;
+        transition: 0.2s;
+    }
+
+        .btn-bonfire:hover {
+            background: #36453B;
+            color: #fff;
+        }
+</style>
+
+<div class="container py-5">
+    <div class="order-board">
+        <h2 class="order-header">SỔ LỆNH ĐIỀU PHỐI ĐƠN HÀNG</h2>
+
+        <div class="text-center mb-5">
+            <a asp-action="Create" class="btn-bonfire" style="background-color: #36453B; color: #F4F2EB; font-size: 1rem; padding: 10px 25px;">
+                + GHI NHẬN ĐƠN MỚI TẠI QUẦY
+            </a>
+        </div>
+
+        <div class="row">
+            @if (!Model.Any())
+            {
+                <div class="col-12 text-center text-muted py-5" style="font-style: italic;">
+                    <h5>Hiện tại chưa có lệnh điều phối nào trong hệ thống...</h5>
+                </div>
+            }
+            else
+            {
+                @foreach (var item in Model)
+                {
+                    <div class="col-md-6">
+                        <div class="order-card">
+                            <div class="d-flex justify-content-between align-items-center-custom mb-2">
+                                <div>
+                                    <h5 class="fw-bold m-0 text-dark">MÃ ĐƠN: #@item.MaDonHang</h5>
+                                    <small class="text-muted">⏱ @item.NgayDat.ToString("dd/MM/yyyy HH:mm")</small>
+                                </div>
+                                @{
+                                    string classTrangThai = "status-pending";
+                                    if (item.TrangThai == "Đang pha chế") classTrangThai = "status-making";
+                                    if (item.TrangThai == "Đã giao") classTrangThai = "status-done";
+                                }
+                                <span class="status-badge @classTrangThai">
+                                    ● @item.TrangThai
+                                </span>
+                            </div>
+
+                            <hr style="border-top: 1px dashed #36453B; margin: 10px 0;">
+
+                            <p class="mb-1"><strong>👤 Khách hàng:</strong> @item.TenKhachHang</p>
+                            <p class="mb-1"><strong>📞 Liên lạc:</strong> @item.SoDienThoai</p>
+
+                            <div class="receipt-items">
+                                <div class="item-row">
+                                    <span class="fw-bold text-success">
+                                        @(string.IsNullOrEmpty(item.GhiChu) ? "Không có thông tin món cụ thể" : item.GhiChu)
+                                    </span>
+                                    <span class="badge bg-secondary text-white">x1</span>
+                                </div>
+                            </div>
+
+                            <div class="d-flex justify-content-between align-items-center mt-3">
+                                <div>
+                                    <span style="font-size: 0.8rem; color: #777;">TỔNG CỘNG:</span><br>
+                                    <span class="text-danger fw-bold" style="font-size: 1.2rem;">@item.TongTien.ToString("N0") Đ</span>
+                                </div>
+                                <div class="d-flex gap-1">
+                                    <a asp-action="Edit" asp-route-id="@item.MaDonHang" class="btn-bonfire" style="padding: 4px 10px;">ĐỔI TRẠNG THÁI</a>
+                                    <a asp-action="Delete" asp-route-id="@item.MaDonHang" class="btn-bonfire text-danger" style="border-color: #dc3545; padding: 4px 10px;">HỦY</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+        </div>
+    </div>
+</div>

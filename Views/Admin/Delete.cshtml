@@ -1,0 +1,127 @@
+﻿@model CoffeeShopManager.Models.SanPham
+
+@{
+    ViewData["Title"] = "Xóa Món - BonFire Admin";
+}
+
+<style>
+    @@import url('https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Playfair+Display:ital,wght@0,700;1,700&display=swap');
+
+    .delete-container {
+        font-family: 'Courier Prime', monospace;
+        background-color: #F4F2EB;
+        border: 3px solid #8B2F29; /* Viền đỏ cảnh báo */
+        padding: 40px;
+        max-width: 600px;
+        margin: 50px auto;
+        position: relative;
+    }
+
+        /* Con dấu đỏ cảnh báo tuyệt đối */
+        .delete-container::before {
+            content: "LỆNH HỦY BỎ";
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            border: 4px double #8B2F29;
+            color: #8B2F29;
+            padding: 5px 15px;
+            font-weight: bold;
+            transform: rotate(-10deg);
+            opacity: 0.8;
+        }
+
+    .delete-title {
+        font-family: 'Playfair Display', serif;
+        color: #8B2F29;
+        text-align: center;
+        text-transform: uppercase;
+        border-bottom: 2px dashed #8B2F29;
+        padding-bottom: 15px;
+        margin-bottom: 20px;
+    }
+
+    .warning-text {
+        text-align: center;
+        color: #2C2C2C;
+        font-style: italic;
+        margin-bottom: 30px;
+        font-size: 1.1rem;
+    }
+
+    .item-details {
+        background-color: #EBE4D5;
+        padding: 20px;
+        border: 1px dashed #36453B;
+        margin-bottom: 30px;
+    }
+
+    .detail-row {
+        margin-bottom: 10px;
+    }
+
+    .detail-label {
+        font-weight: bold;
+        color: #36453B;
+        display: inline-block;
+        width: 150px;
+    }
+
+    .cong-btn {
+        background-color: transparent;
+        border: 2px solid #36453B;
+        color: #36453B;
+        font-weight: bold;
+        text-transform: uppercase;
+        padding: 10px 25px;
+        text-decoration: none;
+        display: inline-block;
+        transition: all 0.3s;
+        cursor: pointer;
+    }
+
+    .cong-btn-danger {
+        background-color: #8B2F29;
+        color: #F4F2EB;
+        border-color: #8B2F29;
+    }
+
+        .cong-btn-danger:hover {
+            background-color: #5c1f1b;
+            border-color: #5c1f1b;
+        }
+</style>
+
+<div class="container">
+    <div class="delete-container shadow">
+        <h2 class="delete-title">XÁC NHẬN XÓA MÓN</h2>
+        <p class="warning-text">Bạn có chắc chắn muốn vĩnh viễn xóa món này khỏi thực đơn không? Hành động này không thể hoàn tác!</p>
+
+        <div class="item-details">
+            <div class="text-center mb-3">
+                <img src="@(string.IsNullOrEmpty(Model.HinhAnh) ? "https://via.placeholder.com/150" : Model.HinhAnh)"
+                     alt="@Model.TenSP" style="width: 150px; height: 150px; object-fit: cover; border: 3px solid #36453B;" />
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Tên sản phẩm:</span>
+                <span class="fw-bold" style="color: #8B2F29;">@Model.TenSP</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Giá bán:</span>
+                <span>@Model.Gia.ToString("N0") Đ</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Thuộc danh mục:</span>
+                <span>@(Model.DanhMuc != null ? Model.DanhMuc.TenDanhMuc : "Không xác định")</span>
+            </div>
+        </div>
+
+        <form asp-action="Delete">
+            <input type="hidden" asp-for="MaSP" />
+            <div class="d-flex justify-content-between align-items-center">
+                <a asp-action="Index" class="cong-btn">← GIỮ LẠI (HỦY THAO TÁC)</a>
+                <button type="submit" class="cong-btn cong-btn-danger">XÓA VĨNH VIỄN ✖</button>
+            </div>
+        </form>
+    </div>
+</div>

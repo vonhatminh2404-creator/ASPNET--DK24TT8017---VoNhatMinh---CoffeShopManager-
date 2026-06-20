@@ -1,0 +1,65 @@
+﻿<!DOCTYPE html>
+@using CoffeeShopManager.Data
+@inject ApplicationDbContext _context
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - BonFire Coffeehouse</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+</head>
+<body style="background-color: #F4F2EB; margin: 0; padding: 0;">
+
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light border-bottom box-shadow py-2 px-0 m-0" style="width: 100%;">
+            <div class="container-fluid d-flex justify-content-between align-items-center px-4">
+
+                <a class="navbar-brand m-0" asp-area="" asp-controller="Home" asp-action="Index">
+                    <img src="~/images/bonfire.png" height="180" alt="BonFire Coffee" style="object-fit: contain;" />
+                </a>
+
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-end" style="font-family: 'Playfair Display', serif; font-size: 1rem; letter-spacing: 0.05rem;">
+                    <ul class="navbar-nav me-4">
+                        <li class="nav-item mx-2">
+                            <a class="nav-link text-dark fw-bold text-uppercase border-bottom border-2 border-dark" asp-area="" asp-controller="Home" asp-action="Index">HOME</a>
+                        </li>
+                        <li class="nav-item mx-2">
+                            <a class="nav-link text-danger text-uppercase fw-bold" asp-area="" asp-controller="Admin" asp-action="Index">ADMIN</a>
+                        </li>
+                    </ul>
+                    @{
+                        // Biến đếm số lượng đơn hàng
+                        int soLuongDon = 0;
+                        try
+                        {
+                            soLuongDon = _context.DonHangs.Count();
+                        }
+                        catch { }
+                    }
+
+                    <a class="btn btn-outline-dark" asp-controller="DonHang" asp-action="Index">
+                        ĐƠN HÀNG
+                        @if (soLuongDon > 0)
+                        {
+                            <span class="badge bg-danger rounded-pill" style="margin-left: 5px; font-size: 0.8rem;">
+                                @soLuongDon
+                            </span>
+                        }
+                    </a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main role="main">
+        @RenderBody()
+    </main>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

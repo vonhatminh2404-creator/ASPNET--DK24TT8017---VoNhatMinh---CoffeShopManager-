@@ -1,0 +1,159 @@
+﻿@model CoffeeShopManager.Models.SanPham
+
+@{
+    ViewData["Title"] = "Hồ Sơ Món - BonFire Admin";
+}
+
+<style>
+    @@import url('https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Playfair+Display:ital,wght@0,700;1,700&display=swap');
+
+    .details-container {
+        font-family: 'Courier Prime', monospace;
+        background-color: #F4F2EB; /* Màu kem đặc trưng */
+        border: 3px solid #36453B;
+        padding: 40px;
+        max-width: 800px;
+        margin: 50px auto;
+        position: relative;
+    }
+
+        /* Con dấu mộc chứng nhận bản gốc */
+        .details-container::before {
+            content: "HỒ SƠ GỐC";
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            border: 4px double #36453B;
+            color: #36453B;
+            padding: 5px 15px;
+            font-weight: bold;
+            transform: rotate(5deg);
+            opacity: 0.4;
+            letter-spacing: 2px;
+        }
+
+    .details-title {
+        font-family: 'Playfair Display', serif;
+        color: #36453B;
+        text-align: center;
+        text-transform: uppercase;
+        border-bottom: 2px dashed #36453B;
+        padding-bottom: 15px;
+        margin-bottom: 30px;
+        letter-spacing: 1px;
+    }
+
+    .dossier-card {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 30px;
+        align-items: flex-start;
+        background-color: #EBE4D5;
+        padding: 30px;
+        border: 1px solid #36453B;
+    }
+
+    .dossier-image {
+        flex: 1;
+        min-width: 250px;
+        text-align: center;
+    }
+
+        .dossier-image img {
+            width: 100%;
+            max-width: 300px;
+            height: auto;
+            aspect-ratio: 1/1;
+            object-fit: cover;
+            border: 4px solid #F4F2EB;
+            outline: 2px solid #36453B;
+            box-shadow: 5px 5px 0px rgba(54, 69, 59, 0.2);
+        }
+
+    .dossier-info {
+        flex: 2;
+        min-width: 300px;
+    }
+
+    .info-row {
+        margin-bottom: 15px;
+        border-bottom: 1px dotted #36453B;
+        padding-bottom: 8px;
+    }
+
+    .info-label {
+        font-weight: bold;
+        color: #8B2F29;
+        display: inline-block;
+        width: 140px;
+        text-transform: uppercase;
+        font-size: 0.9rem;
+    }
+
+    .info-data {
+        color: #2C2C2C;
+        font-size: 1.1rem;
+        font-weight: bold;
+    }
+
+    .cong-btn {
+        background-color: transparent;
+        border: 2px solid #36453B;
+        color: #36453B;
+        font-weight: bold;
+        text-transform: uppercase;
+        padding: 10px 25px;
+        text-decoration: none;
+        display: inline-block;
+        transition: all 0.3s;
+        cursor: pointer;
+    }
+
+    .cong-btn-warning {
+        background-color: #d4a017;
+        color: #F4F2EB;
+        border-color: #d4a017;
+    }
+
+        .cong-btn-warning:hover {
+            background-color: #b58812;
+            border-color: #b58812;
+        }
+</style>
+
+<div class="container">
+    <div class="details-container shadow">
+        <h2 class="details-title">TRÍCH LỤC HỒ SƠ</h2>
+
+        <div class="dossier-card">
+            <div class="dossier-image">
+                <img src="@(string.IsNullOrEmpty(Model.HinhAnh) ? "https://via.placeholder.com/300?text=Chua+Co+Anh" : Model.HinhAnh)"
+                     alt="@Model.TenSP" />
+            </div>
+
+            <div class="dossier-info">
+                <div class="info-row">
+                    <span class="info-label">Mã Định Danh:</span>
+                    <span class="info-data">#@Model.MaSP</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Tên Gọi:</span>
+                    <span class="info-data" style="color: #36453B; font-size: 1.3rem;">@Model.TenSP</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Thuộc Nhóm:</span>
+                    <span class="info-data">@(Model.DanhMuc != null ? Model.DanhMuc.TenDanhMuc : "Đang cập nhật")</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Mức Giá:</span>
+                    <span class="info-data" style="color: #8B2F29;">@Model.Gia.ToString("N0") VNĐ</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="d-flex justify-content-between align-items-center mt-4">
+            <a asp-action="Index" class="cong-btn">← ĐÓNG HỒ SƠ</a>
+            <a asp-action="Edit" asp-route-id="@Model.MaSP" class="cong-btn cong-btn-warning">CHỈNH SỬA LẠI ✎</a>
+        </div>
+    </div>
+</div>

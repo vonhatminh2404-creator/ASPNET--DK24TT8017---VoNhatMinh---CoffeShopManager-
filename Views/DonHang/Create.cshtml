@@ -1,0 +1,152 @@
+﻿@model CoffeeShopManager.Models.DonHang
+
+@{
+    ViewData["Title"] = "Ghi Nhận Đơn Hàng - BonFire";
+}
+
+<style>
+    @@import url('https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Playfair+Display:ital,wght@0,700;1,700&display=swap');
+
+    .create-container {
+        font-family: 'Courier Prime', monospace;
+        background-color: #F4F2EB;
+        border: 3px solid #36453B;
+        padding: 40px;
+        max-width: 600px;
+        margin: 50px auto;
+        position: relative;
+    }
+
+        .create-container::before {
+            content: "PHIẾU ORDER";
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            border: 3px solid #36453B;
+            color: #36453B;
+            padding: 5px 15px;
+            font-weight: bold;
+            transform: rotate(10deg);
+            opacity: 0.5;
+        }
+
+    .create-title {
+        font-family: 'Playfair Display', serif;
+        color: #8B2F29;
+        text-align: center;
+        text-transform: uppercase;
+        border-bottom: 2px dashed #8B2F29;
+        padding-bottom: 15px;
+        margin-bottom: 30px;
+    }
+
+    .form-group label {
+        font-weight: bold;
+        color: #36453B;
+        margin-bottom: 8px;
+        display: block;
+    }
+
+    .form-control-custom {
+        background-color: transparent;
+        border: none;
+        border-bottom: 2px solid #36453B;
+        border-radius: 0;
+        padding: 10px 5px;
+        width: 100%;
+        font-family: 'Courier Prime', monospace;
+        margin-bottom: 20px;
+    }
+
+        .form-control-custom:focus {
+            outline: none;
+            background-color: #EBE4D5;
+            border-bottom-color: #8B2F29;
+        }
+
+    .cong-btn {
+        background-color: transparent;
+        border: 2px solid #36453B;
+        color: #36453B;
+        font-weight: bold;
+        text-transform: uppercase;
+        padding: 10px 25px;
+        text-decoration: none;
+        display: inline-block;
+        transition: all 0.3s;
+        cursor: pointer;
+    }
+
+    .cong-btn-save {
+        background-color: #36453B;
+        color: #F4F2EB;
+    }
+
+        .cong-btn-save:hover {
+            background-color: #8B2F29;
+            border-color: #8B2F29;
+        }
+
+    .text-danger-custom {
+        color: #8B2F29;
+        font-size: 0.85rem;
+        font-style: italic;
+    }
+</style>
+
+<div class="container">
+    <div class="create-container shadow">
+        <h2 class="create-title">GHI NHẬN ĐƠN MỚI</h2>
+
+        <form asp-action="Create">
+            <input type="hidden" asp-for="MaSP" />
+
+            <div asp-validation-summary="ModelOnly" class="text-danger-custom mb-3"></div>
+
+            <div class="form-group mb-4">
+                <label>Tên Khách Hàng:</label>
+                <input asp-for="TenKhachHang" class="form-control-custom" placeholder="Nhập tên khách..." />
+                <span asp-validation-for="TenKhachHang" class="text-danger-custom"></span>
+            </div>
+
+            <div class="form-group mb-4">
+                <label>Số Điện Thoại:</label>
+                <input asp-for="SoDienThoai" class="form-control-custom" placeholder="Nhập số liên lạc..." />
+                <span asp-validation-for="SoDienThoai" class="text-danger-custom"></span>
+            </div>
+
+            <div class="form-group mb-4">
+                <label>Tổng Thanh Toán (VNĐ):</label>
+                <input asp-for="TongTien" type="number" class="form-control-custom" placeholder="Ví dụ: 50000" />
+                <span asp-validation-for="TongTien" class="text-danger-custom"></span>
+            </div>
+
+            <div class="form-group mb-4">
+                <label>Trạng Thái Đơn:</label>
+                <select asp-for="TrangThai" class="form-control-custom">
+                    <option value="Chờ xử lý">Chờ xử lý</option>
+                    <option value="Đang pha chế">Đang pha chế</option>
+                    <option value="Đã giao">Đã giao</option>
+                </select>
+                <span asp-validation-for="TrangThai" class="text-danger-custom"></span>
+            </div>
+
+            <div class="form-group mb-4">
+                <label>Ghi Chú Thêm:</label>
+                <textarea asp-for="GhiChu" class="form-control-custom" rows="2" placeholder="Ví dụ: Ít đá, nhiều sữa..."></textarea>
+                <span asp-validation-for="GhiChu" class="text-danger-custom"></span>
+            </div>
+
+            <div class="d-flex justify-content-between align-items-center mt-5">
+                <a asp-action="Index" class="cong-btn">← TRỞ VỀ</a>
+                <button type="submit" class="cong-btn cong-btn-save">CHỐT ĐƠN ✓</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

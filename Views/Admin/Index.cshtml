@@ -1,0 +1,168 @@
+﻿@model IEnumerable<CoffeeShopManager.Models.SanPham>
+
+@{
+    ViewData["Title"] = "Quản Trị Thực Đơn";
+}
+
+<style>
+    @@import url('https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Playfair+Display:ital,wght@0,700;1,700&display=swap');
+    /* Tái sử dụng bảng màu của trang chủ */
+    .admin-container {
+        font-family: 'Courier Prime', monospace;
+        color: #2C2C2C;
+        background-color: #F4F2EB;
+        padding: 30px;
+        border: 3px solid #36453B;
+        border-radius: 5px;
+    }
+
+    .admin-title {
+        font-family: 'Playfair Display', serif;
+        color: #8B2F29;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        border-bottom: 2px dashed #36453B;
+        padding-bottom: 10px;
+        margin-bottom: 20px;
+        display: inline-block;
+    }
+
+    /* Tùy chỉnh bảng dữ liệu */
+    .table-custom {
+        border-collapse: separate;
+        border-spacing: 0 10px;
+        width: 100%;
+    }
+
+        .table-custom thead th {
+            border-bottom: 2px solid #36453B;
+            color: #36453B;
+            text-transform: uppercase;
+            font-weight: bold;
+            padding: 10px;
+        }
+
+        .table-custom tbody tr {
+            background-color: #EBE4D5;
+            transition: transform 0.2s;
+        }
+
+            .table-custom tbody tr:hover {
+                transform: translateX(5px);
+                background-color: #dfd8c7;
+            }
+
+        .table-custom td {
+            vertical-align: middle;
+            padding: 10px;
+            border-top: 1px dashed #36453B;
+            border-bottom: 1px dashed #36453B;
+        }
+
+            .table-custom td:first-child {
+                border-left: 1px dashed #36453B;
+            }
+
+            .table-custom td:last-child {
+                border-right: 1px dashed #36453B;
+            }
+
+    /* Nút bấm hoài cổ */
+    .cong-btn {
+        background-color: transparent;
+        border: 2px solid #2C2C2C;
+        color: #2C2C2C;
+        font-weight: bold;
+        text-transform: uppercase;
+        border-radius: 0;
+        padding: 5px 15px;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        display: inline-block;
+        font-size: 0.85rem;
+    }
+
+    .cong-btn-primary {
+        border-color: #36453B;
+        color: #36453B;
+    }
+
+        .cong-btn-primary:hover {
+            background-color: #36453B;
+            color: #F4F2EB;
+        }
+
+    .cong-btn-danger {
+        border-color: #8B2F29;
+        color: #8B2F29;
+    }
+
+        .cong-btn-danger:hover {
+            background-color: #8B2F29;
+            color: #F4F2EB;
+        }
+
+    .cong-btn-warning {
+        border-color: #d4a017;
+        color: #d4a017;
+    }
+
+        .cong-btn-warning:hover {
+            background-color: #d4a017;
+            color: #F4F2EB;
+        }
+</style>
+
+<div class="container py-5">
+    <div class="admin-container">
+
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2 class="admin-title m-0">KHO LƯU TRỮ THỰC ĐƠN</h2>
+            <p>
+                <a asp-action="Create" class="cong-btn cong-btn-primary">+ THÊM MÓN MỚI</a>
+            </p>
+        </div>
+
+        <table class="table-custom text-center">
+            <thead>
+                <tr>
+                    <th>Hình Ảnh</th>
+                    <th class="text-start">Tên Sản Phẩm</th>
+                    <th>Danh Mục</th>
+                    <th>Giá Tiền</th>
+                    <th>Thao Tác</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @* Hiển thị ảnh thu nhỏ *@
+                            <img src="@(string.IsNullOrEmpty(item.HinhAnh) || item.HinhAnh == "Không" ? "https://via.placeholder.com/60" : item.HinhAnh)"
+                                 alt="@item.TenSP" style="width: 60px; height: 60px; object-fit: cover; border: 2px solid #36453B;" />
+                        </td>
+                        <td class="text-start fw-bold" style="color: #8B2F29;">
+                            @Html.DisplayFor(modelItem => item.TenSP)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.DanhMuc.TenDanhMuc)
+                        </td>
+                        <td class="fw-bold">
+                            @item.Gia.ToString("N0") Đ
+                        </td>
+                        <td>
+                            <a asp-action="Edit" asp-route-id="@item.MaSP" class="cong-btn cong-btn-warning mb-1 mb-md-0">SỬA</a>
+                            <a asp-action="Details" asp-route-id="@item.MaSP" class="cong-btn cong-btn-primary mb-1 mb-md-0">XEM</a>
+                            <a asp-action="Delete" asp-route-id="@item.MaSP" class="cong-btn cong-btn-danger">XÓA</a>
+                            <a asp-controller="DonHang" asp-action="Create" asp-route-sanPhamId="@item.MaSP" class="btn btn-success btn-sm" style="font-weight: bold;">
+        🛒 ĐẶT MÓN NÀY
+    </a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+    </div>
+</div>
