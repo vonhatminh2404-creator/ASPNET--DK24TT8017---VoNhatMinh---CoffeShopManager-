@@ -1,9 +1,11 @@
 
+using CoffeeShopManager.Data;
+using CoffeeShopManager.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using CoffeeShopManager.Models;
-using CoffeeShopManager.Data;
 
+[Authorize(Roles = "Admin")]
 public class DonHangController : Controller
 {
     private readonly ApplicationDbContext _context;

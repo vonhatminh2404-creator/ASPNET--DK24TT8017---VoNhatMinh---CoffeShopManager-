@@ -48,6 +48,26 @@
                             </span>
                         }
                     </a>
+                    @if (User.Identity != null && User.Identity.IsAuthenticated)
+                    {
+                        <span>Xin chào, @User.Identity.Name</span>
+
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <a asp-controller="Admin" asp-action="Index">ADMIN</a>
+                            <a asp-controller="DonHang" asp-action="Index">ĐƠN HÀNG</a>
+                        }
+
+                        <form asp-controller="Account" asp-action="Logout" method="post" style="display:inline;">
+                            @Html.AntiForgeryToken()
+                            <button type="submit" class="btn btn-link">Đăng xuất</button>
+                        </form>
+                    }
+                    else
+                    {
+                        <a asp-controller="Account" asp-action="Register">Đăng ký</a>
+                        <a asp-controller="Account" asp-action="Login">Đăng nhập</a>
+                    }
                 </div>
             </div>
         </nav>
