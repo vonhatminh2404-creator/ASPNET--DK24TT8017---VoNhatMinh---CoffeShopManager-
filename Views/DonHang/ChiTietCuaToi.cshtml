@@ -101,6 +101,22 @@
             background: #e9e3d7;
             color: #26404a;
         }
+
+    .cancel-order-btn {
+        min-width: 170px;
+        height: 52px;
+        border: none;
+        background: #dc3545;
+        color: white;
+        font-weight: 900;
+        text-transform: uppercase;
+        cursor: pointer;
+        padding: 0 20px;
+    }
+
+        .cancel-order-btn:hover {
+            background: #b92a37;
+        }
 </style>
 
 <div class="order-detail-page">
@@ -168,7 +184,21 @@
                 </tbody>
             </table>
         }
+        @if (Model.TrangThai == "Chờ xử lý")
+        {
+            <form asp-controller="DonHang"
+                  asp-action="HuyDon"
+                  asp-route-id="@Model.MaDonHang"
+                  method="post"
+                  onsubmit="return confirm('Bạn có chắc chắn muốn hủy đơn hàng này không?');"
+                  style="display:inline-block; margin-top: 25px; margin-right: 12px;">
+                @Html.AntiForgeryToken()
 
+                <button type="submit" class="cancel-order-btn">
+                    Hủy đơn hàng
+                </button>
+            </form>
+        }
         <a asp-controller="DonHang" asp-action="CuaToi" class="back-btn">
             ← Trở về
         </a>

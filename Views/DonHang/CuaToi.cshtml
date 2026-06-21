@@ -13,7 +13,7 @@
     }
 
     .my-order-sheet {
-        max-width: 1100px;
+        max-width: 1150px;
         margin: 0 auto;
         background: #f8f6ef;
         border: 4px solid #4d5c4f;
@@ -36,6 +36,24 @@
         width: 92%;
     }
 
+    .success-message {
+        background: #e6f4ea;
+        color: #1f7a3b;
+        border: 2px solid #1f7a3b;
+        padding: 14px 18px;
+        margin-bottom: 24px;
+        font-weight: 900;
+    }
+
+    .error-message {
+        background: #fdecea;
+        color: #b42318;
+        border: 2px solid #b42318;
+        padding: 14px 18px;
+        margin-bottom: 24px;
+        font-weight: 900;
+    }
+
     .empty-order {
         text-align: center;
         color: #28404a;
@@ -47,6 +65,7 @@
     .order-table {
         width: 100%;
         border-collapse: collapse;
+        margin-top: 20px;
     }
 
         .order-table th {
@@ -71,16 +90,24 @@
         color: #8f2f24;
         font-size: 20px;
         font-weight: 900;
+        white-space: nowrap;
     }
 
     .status-badge {
         display: inline-block;
         padding: 8px 14px;
         border-radius: 999px;
-        background: #fff3cd;
-        color: #856404;
         font-weight: 900;
         border: 1px solid #d6a700;
+        background: #fff3cd;
+        color: #856404;
+        white-space: nowrap;
+    }
+
+    .status-cancelled {
+        background: #fdecea;
+        color: #b42318;
+        border-color: #b42318;
     }
 
     .detail-btn {
@@ -91,12 +118,35 @@
         text-decoration: none;
         font-weight: 900;
         border-radius: 6px;
+        white-space: nowrap;
     }
 
         .detail-btn:hover {
             background: #2f4335;
             color: white;
         }
+
+    .cancel-btn {
+        background: #dc3545;
+        color: white;
+        border: none;
+        padding: 10px 16px;
+        font-weight: 900;
+        border-radius: 6px;
+        cursor: pointer;
+        white-space: nowrap;
+        font-family: 'Merriweather', 'Noto Serif Display', 'Be Vietnam Pro', serif;
+    }
+
+        .cancel-btn:hover {
+            background: #b92a37;
+        }
+
+    .cannot-cancel {
+        color: #777;
+        font-weight: 900;
+        white-space: nowrap;
+    }
 
     .back-btn {
         display: inline-flex;
@@ -116,12 +166,31 @@
             background: #e9e3d7;
             color: #26404a;
         }
+
+    .table-wrap {
+        width: 100%;
+        overflow-x: auto;
+    }
 </style>
 
 <div class="my-order-page">
     <div class="my-order-sheet">
         <h1 class="order-title">Đơn hàng của tôi</h1>
         <div class="order-line"></div>
+
+        @if (TempData["Success"] != null)
+        {
+            <div class="success-message">
+                @TempData["Success"]
+            </div>
+        }
+
+        @if (TempData["Error"] != null)
+        {
+            <div class="error-message">
+                @TempData["Error"]
+            </div>
+        }
 
         @if (Model == null || !Model.Any())
         {
@@ -131,43 +200,94 @@
         }
         else
         {
-            <table class="order-table">
-                <thead>
-                    <tr>
-                        <th>Mã đơn</th>
-                        <th>Ngày đặt</th>
-                        <th>Tên khách</th>
-                        <th>Số điện thoại</th>
-                        <th>Tổng tiền</th>
-                        <th>Trạng thái</th>
-                        <th>Chi tiết</th>
-                    </tr>
-                </thead>
-
-                <tbody>
-                    @foreach (var item in Model)
-                    {
+            <div class="table-wrap">
+                <table class="order-table">
+                    <thead>
                         <tr>
-                            <td>#@item.MaDonHang</td>
-                            <td>@item.NgayDat.ToString("dd/MM/yyyy HH:mm")</td>
-                            <td>@item.TenKhachHang</td>
-                            <td>@item.SoDienThoai</td>
-                            <td class="price-text">@item.TongTien.ToString("N0") Đ</td>
-                            <td>
-                                <span class="status-badge">@item.TrangThai</span>
-                            </td>
-                            <td>
-                                <a asp-controller="DonHang"
-                                   asp-action="ChiTietCuaToi"
-                                   asp-route-id="@item.MaDonHang"
-                                   class="detail-btn">
-                                    Xem
-                                </a>
-                            </td>
+                            <th>Mã đơn</th>
+                            <th>Ngày đặt</th>
+                            <th>Tên khách</th>
+                            <th>Số điện thoại</th>
+                            <th>Tổng tiền</th>
+                            <th>Trạng thái</th>
+                            <th>Chi tiết</th>
+                            <th>Hủy đơn</th>
                         </tr>
-                    }
-                </tbody>
-            </table>
+                    </thead>
+
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>#@item.MaDonHang</td>
+
+                                <td>
+                                    @item.NgayDat.ToString("dd/MM/yyyy HH:mm")
+                                </td>
+
+                                <td>
+                                    @item.TenKhachHang
+                                </td>
+
+                                <td>
+                                    @item.SoDienThoai
+                                </td>
+
+                                <td class="price-text">
+                                    @item.TongTien.ToString("N0") Đ
+                                </td>
+
+                                <td>
+                                    @if (item.TrangThai == "Đã hủy")
+                                    {
+                                        <span class="status-badge status-cancelled">
+                                            @item.TrangThai
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="status-badge">
+                                            @item.TrangThai
+                                        </span>
+                                    }
+                                </td>
+
+                                <td>
+                                    <a asp-controller="DonHang"
+                                       asp-action="ChiTietCuaToi"
+                                       asp-route-id="@item.MaDonHang"
+                                       class="detail-btn">
+                                        Xem
+                                    </a>
+                                </td>
+
+                                <td>
+                                    @if (item.TrangThai == "Chờ xử lý")
+                                    {
+                                        <form asp-controller="DonHang"
+                                              asp-action="HuyDon"
+                                              asp-route-id="@item.MaDonHang"
+                                              method="post"
+                                              onsubmit="return confirm('Bạn có chắc chắn muốn hủy đơn hàng này không?');">
+                                            @Html.AntiForgeryToken()
+
+                                            <button type="submit" class="cancel-btn">
+                                                Hủy đơn
+                                            </button>
+                                        </form>
+                                    }
+                                    else
+                                    {
+                                        <span class="cannot-cancel">
+                                            Không thể hủy
+                                        </span>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
         }
 
         <a asp-controller="Home" asp-action="Index" class="back-btn">

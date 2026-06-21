@@ -234,5 +234,41 @@ namespace CoffeeShopManager.Controllers
         {
             return _context.DonHangs.Any(e => e.MaDonHang == madonhang);
         }
+        // USER: Hủy đơn hàng của chính mình
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "User")]
+        public async Task<IActionResult> HuyDon(int id)
+        {
+            var maNguoiDung = LayMaNguoiDungHienTai();
+
+            if (maNguoiDung == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
+            var donHang = await _context.DonHangs
+                .FirstOrDefaultAsync(d => d.MaDonHang == id && d.MaNguoiDung == maNguoiDung);
+
+            if (donHang == null)
+            {
+                return NotFound();
+            }
+
+            if (donHang.TrangThai != "Chờ xử lý")
+            {
+                TempData["Error"] = "Chỉ có thể hủy đơn hàng đang ở trạng thái Chờ xử lý.";
+                return RedirectToAction(nameof(CuaToi));
+            }
+
+            donHang.TrangThai = "Đã hủy";
+
+            _context.Update(donHang);
+            await _context.SaveChangesAsync();
+
+            TempData["Success"] = "Bạn đã hủy đơn hàng thành công.";
+
+            return RedirectToAction(nameof(CuaToi));
+        }
     }
 }
