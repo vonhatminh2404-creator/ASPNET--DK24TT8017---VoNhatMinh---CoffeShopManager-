@@ -19,10 +19,11 @@ namespace CoffeeShopManager.Models
 
         public string? HinhAnh { get; set; }
 
-        // Định nghĩa Khóa ngoại
         public int MaDanhMuc { get; set; }
 
         [ForeignKey("MaDanhMuc")]
-        public virtual DanhMuc? DanhMuc { get; set; } // Thuộc tính điều hướng về lớp DanhMuc
+        public virtual DanhMuc? DanhMuc { get; set; }
+
+        public bool IsAn { get; set; } = false;
     }
 }

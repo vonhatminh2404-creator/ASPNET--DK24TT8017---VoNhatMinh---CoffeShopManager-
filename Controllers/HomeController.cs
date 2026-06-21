@@ -1,31 +1,76 @@
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using CoffeeShopManager.Data; // Kéo thư mục chứa ApplicationDbContext vào
+using CoffeeShopManager.Data;
 using CoffeeShopManager.Models;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
 
 namespace CoffeeShopManager.Controllers
 {
     public class HomeController : Controller
     {
-        // 1. Khai báo biến kết nối cơ sở dữ liệu
         private readonly ApplicationDbContext _context;
 
-        // 2. Hàm khởi tạo để hệ thống tự động truyền CSDL vào HomeController
         public HomeController(ApplicationDbContext context)
         {
             _context = context;
         }
 
-        // 3. Sửa lại hàm Index để lấy dữ liệu thực tế từ SQL Server
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(
+            string? keyword,
+            int? danhMucId,
+            decimal? giaTu,
+            decimal? giaDen)
         {
-            // Lấy toàn bộ sản phẩm, bắt buộc kèm theo lệnh .Include để nạp tên Danh Mục
-            var danhSachSanPham = await _context.SanPhams
-                                        .Include(s => s.DanhMuc)
-                                        .ToListAsync();
+            var query = _context.SanPhams
+                .Include(s => s.DanhMuc)
+                .AsQueryable();
 
-            // Truyền danh sách thực tế này ra ngoài giao diện trang chủ
+            // Tìm kiếm theo tên sản phẩm
+            if (!string.IsNullOrWhiteSpace(keyword))
+            {
+                query = query.Where(s => s.TenSP != null && s.TenSP.Contains(keyword));
+            }
+
+            // Lọc theo danh mục
+            if (danhMucId.HasValue && danhMucId.Value > 0)
+            {
+                query = query.Where(s => s.MaDanhMuc == danhMucId.Value);
+            }
+
+            // Lọc giá từ
+            if (giaTu.HasValue)
+            {
+                query = query.Where(s => s.Gia >= giaTu.Value);
+            }
+
+            // Lọc giá đến
+            if (giaDen.HasValue)
+            {
+                query = query.Where(s => s.Gia <= giaDen.Value);
+            }
+
+            var danhSachSanPham = await query
+                .OrderBy(s => s.MaDanhMuc)
+                .ThenBy(s => s.TenSP)
+                .ToListAsync();
+
+            var danhMucs = await _context.DanhMucs
+                .OrderBy(d => d.TenDanhMuc)
+                .ToListAsync();
+
+            ViewBag.Keyword = keyword;
+            ViewBag.DanhMucId = danhMucId;
+            ViewBag.GiaTu = giaTu;
+            ViewBag.GiaDen = giaDen;
+
+            ViewBag.DanhMucSelectList = new SelectList(
+                danhMucs,
+                "MaDanhMuc",
+                "TenDanhMuc",
+                danhMucId
+            );
+
             return View(danhSachSanPham);
         }
 
@@ -37,7 +82,10 @@ namespace CoffeeShopManager.Controllers
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            return View(new ErrorViewModel
+            {
+                RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier
+            });
         }
     }
 }

@@ -2,175 +2,462 @@
 
 @{
     ViewData["Title"] = "Thực Đơn";
+
+    string keyword = ViewBag.Keyword as string ?? "";
+    int? danhMucId = ViewBag.DanhMucId as int?;
+    decimal? giaTu = ViewBag.GiaTu as decimal?;
+    decimal? giaDen = ViewBag.GiaDen as decimal?;
 }
 
 <style>
-    @@import url('https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Playfair+Display:ital,wght@0,700;1,700&display=swap');
-
-    :root {
-        --bonfire-bg: #EBE4D5;
-        --bonfire-brown: #3C2A21;
-        --cong-red: #8B2F29;
-        --cong-text: #2C2C2C;
+    .menu-page {
+        background-color: #6f6259;
+        min-height: 100vh;
+        padding: 45px 55px 70px;
+        font-family: 'Merriweather', 'Noto Serif Display', 'Be Vietnam Pro', serif;
     }
 
-    html {
-        scroll-behavior: smooth;
+    .menu-title {
+        text-align: center;
+        color: #4b2e1f;
+        background-color: #f8f5ec;
+        padding: 22px 10px;
+        margin: -45px -55px 35px;
+        font-size: 34px;
+        font-weight: 900;
+        letter-spacing: 3px;
+        text-transform: uppercase;
+        border-bottom: 1px solid #d8cfc2;
     }
 
-    /* KHỐI NỀN TỐI TRÀN TOÀN BỘ HAI BÊN MÀN HÌNH */
-    .product-section-full {
-        background-color: #3C2A21; /* Bạn có thể đổi thành mã màu nâu #3C2A21 tùy ý */
-        background-image: url('https://www.transparenttextures.com/patterns/cream-paper.png');
+        .menu-title span {
+            display: inline-block;
+            border-bottom: 2px dashed #4b2e1f;
+            padding-bottom: 8px;
+        }
+
+    .filter-box {
+        background: #f8f1df;
+        border: 2px solid #d1a856;
+        border-radius: 20px;
+        padding: 22px;
+        margin-bottom: 35px;
+        box-shadow: 0 10px 22px rgba(0, 0, 0, 0.25);
+    }
+
+    .filter-title {
+        color: #3b2a20;
+        font-size: 24px;
+        font-weight: 900;
+        margin-bottom: 18px;
+        text-transform: uppercase;
+    }
+
+    .filter-form {
+        display: grid;
+        grid-template-columns: 2fr 1.4fr 1fr 1fr auto auto;
+        gap: 14px;
+        align-items: end;
+    }
+
+    .filter-group label {
+        display: block;
+        color: #3b2a20;
+        font-size: 15px;
+        font-weight: 900;
+        margin-bottom: 6px;
+    }
+
+    .filter-control {
         width: 100%;
-        margin: 0;
-        padding: 0;
+        height: 42px;
+        border: 1px solid #b88a3b;
+        border-radius: 10px;
+        padding: 8px 12px;
+        background-color: #fffaf0;
+        color: #2f241d;
+        font-weight: 700;
     }
 
-    .sidebar-link {
-        color: var(--bonfire-bg);
-        font-weight: 700;
-        font-size: 1.1rem;
+    .filter-btn,
+    .reset-btn {
+        height: 42px;
+        border-radius: 10px;
+        padding: 0 18px;
+        font-weight: 900;
         text-transform: uppercase;
         text-decoration: none;
-        display: block;
-        padding: 8px 0;
-        border-bottom: 1px dashed rgba(235, 228, 213, 0.3);
-        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        white-space: nowrap;
     }
 
-        .sidebar-link:hover {
-            color: #FFD93D;
-            padding-left: 10px;
+    .filter-btn {
+        border: none;
+        background: #3b2a20;
+        color: #fff8df;
+    }
+
+        .filter-btn:hover {
+            background: #7b3f20;
         }
+
+    .reset-btn {
+        border: 1px solid #3b2a20;
+        color: #3b2a20;
+        background: transparent;
+    }
+
+        .reset-btn:hover {
+            background: #3b2a20;
+            color: white;
+        }
+
+    .category-nav {
+        margin-bottom: 38px;
+        padding: 24px 28px;
+        background: rgba(248, 245, 236, 0.16);
+        border: 1px solid rgba(255, 235, 180, 0.35);
+        border-radius: 18px;
+    }
+
+        .category-nav h3 {
+            color: #ffd84d;
+            font-size: 24px;
+            font-weight: 900;
+            margin-bottom: 18px;
+            text-transform: uppercase;
+        }
+
+    .category-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        padding: 0;
+        margin: 0;
+        list-style: none;
+    }
+
+        .category-list a {
+            display: inline-block;
+            padding: 9px 18px;
+            background-color: #f8f5ec;
+            color: #3b2a20;
+            border-radius: 999px;
+            text-decoration: none;
+            font-weight: 800;
+            border: 1px solid #d4b06a;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.18);
+        }
+
+            .category-list a:hover {
+                background-color: #ffd84d;
+                color: #2c1c14;
+            }
 
     .category-section {
-        scroll-margin-top: 150px;
+        margin-bottom: 55px;
     }
 
-    .cong-title {
-        font-family: 'Playfair Display', serif;
-        color: var(--bonfire-brown);
+    .category-title {
+        color: #ffd84d;
+        font-size: 32px;
+        font-weight: 900;
+        margin-bottom: 28px;
         text-transform: uppercase;
-        letter-spacing: 2px;
-        border-bottom: 2px dashed var(--bonfire-brown);
-        padding-bottom: 10px;
-        margin-bottom: 20px;
-        display: inline-block;
-    }
-
-    .cong-card {
-        background: transparent;
-        border: none;
-        transition: transform 0.2s ease;
-    }
-
-        .cong-card:hover {
-            transform: translateY(-5px);
-        }
-
-    .cong-img-wrapper {
-        border: 3px solid var(--cong-bg);
-        padding: 6px;
-        background-color: #F4EFE6;
-    }
-
-    .cong-product-name {
-        font-weight: 700;
-        text-transform: uppercase;
-        font-size: 1.05rem;
-        margin-top: 15px;
-        color: var(--cong-bg);
-    }
-
-    .cong-product-price {
-        font-weight: 700;
-        font-size: 1.15rem;
-        color: #FFD93D; /* Màu vàng nổi bật trên nền xanh tối */
-    }
-
-    .cong-btn {
-        background-color: transparent;
-        border: 2px solid var(--cong-bg);
-        color: var(--cong-bg);
-        font-weight: bold;
-        text-transform: uppercase;
-        border-radius: 0;
-        padding: 5px 15px;
-        transition: all 0.3s ease;
-    }
-
-        .cong-btn:hover {
-            background-color: var(--cong-bg);
-            color: var(--cong-green);
-        }
-
-    .cong-category-title {
-        color: #FFD93D;
-        border-left: 5px solid var(--cong-bg);
-        padding-left: 12px;
-        font-family: 'Playfair Display', serif;
         letter-spacing: 1px;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.35);
+    }
+
+    .product-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(240px, 1fr));
+        gap: 34px;
+    }
+
+    .product-card {
+        background: linear-gradient(180deg, #f8f1df 0%, #efe2c5 100%);
+        border: 2px solid #d1a856;
+        border-radius: 24px;
+        padding: 20px 20px 24px;
+        text-align: center;
+        box-shadow: 0 12px 26px rgba(0, 0, 0, 0.28);
+        position: relative;
+        overflow: hidden;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+        .product-card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 9px;
+            width: 100%;
+            background: linear-gradient(90deg, #7b3f20, #d4a017, #7b3f20);
+        }
+
+        .product-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 18px 34px rgba(0, 0, 0, 0.35);
+        }
+
+    .product-image-box {
+        width: 100%;
+        height: 210px;
+        background-color: #fffaf0;
+        border: 1px solid #e2c98d;
+        border-radius: 18px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        margin-bottom: 20px;
+        position: relative;
+    }
+
+        .product-image-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+    .image-placeholder-text {
+        display: none;
+        color: #8b6f47;
+        font-size: 16px;
+        font-weight: 700;
+    }
+
+    .product-image-box.no-image .image-placeholder-text {
+        display: block;
+    }
+
+    .product-name {
+        color: #2f241d;
+        font-size: 24px;
+        font-weight: 900;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-bottom: 14px;
+        min-height: 62px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .price-box {
+        display: inline-block;
+        background: linear-gradient(180deg, #ffd84d, #e7a90c);
+        color: #3b2a20;
+        border: 2px solid #7b3f20;
+        border-radius: 14px;
+        padding: 10px 22px;
+        font-size: 27px;
+        font-weight: 900;
+        margin-bottom: 22px;
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.55), 0 5px 10px rgba(0, 0, 0, 0.18);
+    }
+
+    .note-button {
+        border: none;
+        background: linear-gradient(180deg, #5a3825, #2f1d14);
+        color: #fff8df;
+        padding: 12px 26px;
+        border-radius: 999px;
+        font-size: 17px;
+        font-weight: 900;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        cursor: pointer;
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.25);
+    }
+
+        .note-button:hover {
+            background: linear-gradient(180deg, #7b3f20, #3b2a20);
+            transform: scale(1.04);
+        }
+
+    .empty-menu {
+        background-color: #f8f5ec;
+        color: #3b2a20;
+        padding: 24px;
+        border-radius: 16px;
+        font-weight: 900;
+        text-align: center;
+        border: 2px solid #d1a856;
+    }
+
+    @@media (max-width: 1100px) {
+        .filter-form {
+            grid-template-columns: 1fr 1fr;
+        }
+    }
+
+    @@media (max-width: 992px) {
+        .product-grid {
+            grid-template-columns: repeat(2, minmax(220px, 1fr));
+        }
+    }
+
+    @@media (max-width: 650px) {
+        .menu-page {
+            padding: 30px 18px 50px;
+        }
+
+        .menu-title {
+            margin: -30px -18px 30px;
+            font-size: 25px;
+        }
+
+        .filter-form {
+            grid-template-columns: 1fr;
+        }
+
+        .product-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .category-title {
+            font-size: 26px;
+        }
     }
 </style>
 
-<div class="container text-center py-2">
-    <h2 class="cong-title">Thực Đơn Ghi Sổ</h2>
-</div>
+<div class="menu-page">
+    <h2 class="menu-title">
+        <span>Thực Đơn Ghi Sổ</span>
+    </h2>
 
-<div class="product-section-full">
-    <div class="container py-5">
-        <div class="row">
+    <div class="filter-box">
+        <div class="filter-title">Tìm kiếm, lọc sản phẩm</div>
 
-            <div class="col-lg-3 d-none d-lg-block">
-                <div class="sticky-top" style="top: 150px; padding: 15px; border: 2px solid var(--cong-bg);">
-                    <h4 class="font-weight-bold mb-4" style="font-family: 'Playfair Display', serif; color: #FFD93D;">MỤC LỤC</h4>
-                    <ul class="list-unstyled">
-                        @foreach (var group in Model.GroupBy(m => m.DanhMuc?.TenDanhMuc ?? "Món khác"))
-                        {
-                            var targetId = Uri.EscapeDataString(group.Key.Replace(" ", "-"));
-                            <li class="mb-2">
-                                <a href="#@targetId" class="sidebar-link">@group.Key</a>
-                            </li>
-                        }
-                    </ul>
-                </div>
+        <form asp-controller="Home" asp-action="Index" method="get" class="filter-form">
+            <div class="filter-group">
+                <label>Tên sản phẩm</label>
+                <input type="text"
+                       name="keyword"
+                       value="@keyword"
+                       class="filter-control"
+                       placeholder="Nhập tên món..." />
             </div>
 
-            <div class="col-lg-9">
+            <div class="filter-group">
+                <label>Danh mục</label>
+                <select name="danhMucId" class="filter-control" asp-items="ViewBag.DanhMucSelectList">
+                    <option value="">Tất cả danh mục</option>
+                </select>
+            </div>
+
+            <div class="filter-group">
+                <label>Giá từ</label>
+                <input type="number"
+                       name="giaTu"
+                       value="@giaTu"
+                       class="filter-control"
+                       placeholder="0" />
+            </div>
+
+            <div class="filter-group">
+                <label>Giá đến</label>
+                <input type="number"
+                       name="giaDen"
+                       value="@giaDen"
+                       class="filter-control"
+                       placeholder="50000" />
+            </div>
+
+            <button type="submit" class="filter-btn">
+                Tìm
+            </button>
+
+            <a asp-controller="Home" asp-action="Index" class="reset-btn">
+                Xóa lọc
+            </a>
+        </form>
+    </div>
+
+    @if (Model == null || !Model.Any())
+    {
+        <div class="empty-menu">
+            Không tìm thấy sản phẩm phù hợp.
+        </div>
+    }
+    else
+    {
+        <div class="category-nav">
+            <h3>Mục lục</h3>
+
+            <ul class="category-list">
                 @foreach (var group in Model.GroupBy(m => m.DanhMuc?.TenDanhMuc ?? "Món khác"))
                 {
                     var targetId = Uri.EscapeDataString(group.Key.Replace(" ", "-"));
 
-                    <div id="@targetId" class="category-section mb-5">
-                        <h4 class="mb-4 text-uppercase fw-bold cong-category-title">
-                            @group.Key
-                        </h4>
-
-                        <div class="row row-cols-2 row-cols-md-3 row-cols-xl-4 g-4 text-center px-2">
-                            @foreach (var item in group)
-                            {
-                                <div class="col">
-                                    <div class="cong-card d-flex flex-column h-100">
-
-                                        <div class="cong-img-wrapper mx-auto" style="width: 100%; aspect-ratio: 1/1;">
-                                            <img src="@(string.IsNullOrEmpty(item.HinhAnh) || item.HinhAnh == "Không" ? "https://congcaphe.com/uploads/dish/a9db9bb16c2763-87a387a6df1a07.png" : item.HinhAnh)"
-                                                 alt="@item.TenSP" class="w-100 h-100" style="object-fit: cover;">
-                                        </div>
-
-                                        <div class="mt-auto pt-3">
-                                            <h6 class="cong-product-name mb-1">@item.TenSP</h6>
-                                            <p class="cong-product-price mb-3">@item.Gia.ToString("N0") Đ</p>
-                                            <button class="btn cong-btn btn-sm w-100 mt-2">+ Ghi Sổ</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            }
-                        </div>
-                    </div>
+                    <li>
+                        <a href="#@targetId">@group.Key</a>
+                    </li>
                 }
-            </div>
-
+            </ul>
         </div>
-    </div>
+
+        @foreach (var group in Model.GroupBy(m => m.DanhMuc?.TenDanhMuc ?? "Món khác"))
+        {
+            var targetId = Uri.EscapeDataString(group.Key.Replace(" ", "-"));
+
+            <section class="category-section" id="@targetId">
+                <h3 class="category-title">@group.Key</h3>
+
+                <div class="product-grid">
+                    @foreach (var item in group)
+                    {
+                        var imagePath = "";
+
+                        if (string.IsNullOrWhiteSpace(item.HinhAnh))
+                        {
+                            imagePath = "";
+                        }
+                        else if (item.HinhAnh.StartsWith("/") || item.HinhAnh.StartsWith("http"))
+                        {
+                            imagePath = item.HinhAnh;
+                        }
+                        else
+                        {
+                            imagePath = Url.Content("~/images/" + item.HinhAnh);
+                        }
+
+                        <div class="product-card">
+                            <div class="product-image-box @(string.IsNullOrWhiteSpace(imagePath) ? "no-image" : "")">
+                                @if (!string.IsNullOrWhiteSpace(imagePath))
+                                {
+                                    <img src="@imagePath"
+                                         alt="@item.TenSP"
+                                         onerror="this.style.display='none'; this.parentElement.classList.add('no-image');" />
+                                }
+
+                                <span class="image-placeholder-text">Ảnh sản phẩm</span>
+                            </div>
+
+                            <div class="product-name">
+                                @item.TenSP
+                            </div>
+
+                            <div class="price-box">
+                                @item.Gia.ToString("N0") Đ
+                            </div>
+
+                            <form asp-controller="DonHang" asp-action="Create" method="post">
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="sanPhamId" value="@item.MaSP" />
+
+                                <button type="submit" class="note-button">
+                                    + Ghi Sổ
+                                </button>
+                            </form>
+                        </div>
+                    }
+                </div>
+            </section>
+        }
+    }
 </div>

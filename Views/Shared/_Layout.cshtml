@@ -25,11 +25,14 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
 
+    <!-- Font hỗ trợ tiếng Việt, phong cách hoài cổ -->
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@700;900&family=Noto+Serif+Display:wght@700;900&family=Be+Vietnam+Pro:wght@500;600;700&display=swap" rel="stylesheet">
+
     <style>
             body {
                 margin: 0;
                 background-color: #f8f5ec;
-                font-family: Georgia, 'Times New Roman', serif;
+                font-family: 'Merriweather', 'Noto Serif Display', 'Be Vietnam Pro', serif;
             }
 
             .top-header {
@@ -65,7 +68,7 @@
             .hello-text {
                 color: #3b2a20;
                 font-size: 17px;
-                font-weight: bold;
+                font-weight: 700;
                 white-space: nowrap;
             }
 
@@ -88,14 +91,15 @@
             .logout-btn {
                 color: #111;
                 font-size: 17px;
-                font-weight: bold;
+                font-weight: 900;
                 text-decoration: none;
                 letter-spacing: 1px;
                 padding: 0 0 8px 0;
                 border: none;
                 background: none;
                 cursor: pointer;
-                font-family: Georgia, 'Times New Roman', serif;
+                font-family: 'Merriweather', 'Noto Serif Display', 'Be Vietnam Pro', serif;
+                text-transform: uppercase;
             }
 
                 .nav-link-custom:hover,
@@ -123,10 +127,11 @@
                 color: #111;
                 background-color: transparent;
                 font-size: 17px;
-                font-weight: bold;
+                font-weight: 900;
                 text-decoration: none;
                 letter-spacing: 1px;
                 white-space: nowrap;
+                font-family: 'Merriweather', 'Noto Serif Display', 'Be Vietnam Pro', serif;
             }
 
                 .order-btn:hover {
@@ -145,11 +150,39 @@
                 align-items: center;
                 justify-content: center;
                 padding: 2px 6px;
+                font-family: 'Be Vietnam Pro', sans-serif;
             }
 
             .main-content {
                 width: 100%;
                 min-height: 600px;
+            }
+
+            /* Sửa font cho tên sản phẩm ở trang Home */
+            .product-name,
+            .ten-san-pham,
+            .menu-item h3,
+            .menu-item h4,
+            .menu-item-title,
+            .card-title,
+            .product-title,
+            .drink-name,
+            .item-name,
+            .product-card h3,
+            .product-card h4,
+            .product-card h5,
+            .menu-card h3,
+            .menu-card h4,
+            .menu-card h5 {
+                font-family: 'Merriweather', 'Noto Serif Display', 'Be Vietnam Pro', serif !important;
+                font-weight: 900;
+                letter-spacing: 1px;
+                text-transform: uppercase;
+            }
+
+            /* Nếu tên món đang nằm trong thẻ h3, h4, h5 thì cũng dùng font này */
+            h3, h4, h5 {
+                font-family: 'Merriweather', 'Noto Serif Display', 'Be Vietnam Pro', serif;
             }
 
             @@media (max-width: 768px) {
@@ -170,6 +203,7 @@
 
                 .menu-top {
                     justify-content: center;
+                    gap: 18px;
                 }
 
                 .menu-bottom {
@@ -213,18 +247,18 @@
                     <form asp-controller="Account" asp-action="Logout" method="post" class="logout-form">
                         @Html.AntiForgeryToken()
                         <button type="submit" class="logout-btn">
-                            lOGOUT
+                            Đăng xuất
                         </button>
                     </form>
                 }
                 else
                 {
                     <a asp-controller="Account" asp-action="Register" class="nav-link-custom">
-                        ĐĂNG KÝ
+                        Đăng ký
                     </a>
 
                     <a asp-controller="Account" asp-action="Login" class="nav-link-custom">
-                        ĐĂNG NHẬP
+                        Đăng nhập
                     </a>
                 }
             </div>

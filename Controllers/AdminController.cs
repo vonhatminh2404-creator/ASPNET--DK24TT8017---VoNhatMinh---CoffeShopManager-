@@ -165,9 +165,30 @@ public class AdminController : Controller
     }
 
 
-
-    private bool SanPhamExists(int? masp)
+        private bool SanPhamExists(int? masp)
     {
         return _context.SanPhams.Any(e => e.MaSP == masp);
+    }
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> AnHien(int id)
+    {
+        var sanPham = await _context.SanPhams.FindAsync(id);
+
+        if (sanPham == null)
+        {
+            return NotFound();
+        }
+
+        sanPham.IsAn = !sanPham.IsAn;
+
+        _context.Update(sanPham);
+        await _context.SaveChangesAsync();
+
+        TempData["Success"] = sanPham.IsAn
+            ? "Sản phẩm đã được ẩn khỏi trang người dùng."
+            : "Sản phẩm đã được hiển thị lại trên trang người dùng.";
+
+        return RedirectToAction(nameof(Details), new { id = id });
     }
 }
