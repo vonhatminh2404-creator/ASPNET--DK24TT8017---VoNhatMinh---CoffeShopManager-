@@ -20,206 +20,375 @@
 }
 
 <style>
-    .admin-detail-page {
+    .hoso-page {
+        background: #f5f1e8;
         min-height: 100vh;
-        padding: 45px 60px;
-        background-color: #f5efe5;
+        padding: 40px 20px 60px;
         font-family: 'Merriweather', 'Noto Serif Display', 'Be Vietnam Pro', serif;
     }
 
-    .admin-detail-card {
-        max-width: 950px;
+    .hoso-sheet {
+        max-width: 1050px;
         margin: 0 auto;
-        background: white;
-        border: 2px solid #d1a856;
-        border-radius: 22px;
-        padding: 30px;
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 35px;
-        box-shadow: 0 12px 25px rgba(0,0,0,0.18);
+        background: #f8f6ef;
+        border: 4px solid #4d5c4f;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+        padding: 36px 38px 50px;
+        position: relative;
     }
 
-    .admin-image-box {
-        background-color: #fffaf0;
-        border: 1px solid #e2c98d;
-        border-radius: 18px;
-        height: 340px;
+    .stamp-box {
+        position: absolute;
+        top: 28px;
+        right: 28px;
+        border: 5px solid #9ba19a;
+        color: #8d948c;
+        padding: 12px 22px;
+        font-size: 20px;
+        font-weight: 900;
+        letter-spacing: 1px;
+        transform: rotate(10deg);
+        text-transform: uppercase;
+        background: rgba(255,255,255,0.35);
+    }
+
+    .hoso-title {
+        text-align: center;
+        color: #8f2f24;
+        font-size: 48px;
+        font-weight: 900;
+        text-transform: uppercase;
+        margin-top: 10px;
+        margin-bottom: 18px;
+    }
+
+    .hoso-line {
+        border-bottom: 4px dashed #8f2f24;
+        margin: 0 auto 34px;
+        width: 92%;
+    }
+
+    .top-info-area {
+        display: grid;
+        grid-template-columns: 360px 1fr;
+        gap: 34px;
+        align-items: start;
+        margin-bottom: 26px;
+    }
+
+    .image-section {
+        width: 100%;
+    }
+
+    .image-label {
+        display: block;
+        font-size: 20px;
+        font-weight: 900;
+        color: #28404a;
+        margin-bottom: 12px;
+    }
+
+    .image-box {
+        width: 100%;
+        height: 285px;
+        border: 4px solid #4d5c4f;
+        background: #fff;
         display: flex;
         align-items: center;
         justify-content: center;
         overflow: hidden;
     }
 
-        .admin-image-box img {
+        .image-box img {
             width: 100%;
             height: 100%;
             object-fit: cover;
         }
 
-    .admin-info h2 {
-        color: #2f241d;
-        font-size: 32px;
-        font-weight: 900;
-        text-transform: uppercase;
-        margin-bottom: 18px;
-    }
-
-    .info-line {
-        margin-bottom: 12px;
-        font-size: 17px;
-        color: #3b2a20;
+    .no-image {
+        color: #7d7d7d;
+        font-size: 18px;
         font-weight: 700;
+        text-align: center;
+        padding: 20px;
     }
 
-    .price-box {
-        display: inline-block;
-        background: #ffd84d;
-        color: #3b2a20;
-        border: 2px solid #7b3f20;
-        border-radius: 12px;
-        padding: 10px 20px;
-        font-size: 26px;
+    .top-fields {
+        padding-top: 4px;
+    }
+
+    .field-group {
+        margin-bottom: 30px;
+    }
+
+    .field-label {
+        display: block;
+        font-size: 20px;
         font-weight: 900;
-        margin: 15px 0;
+        color: #28404a;
+        margin-bottom: 14px;
+    }
+
+    .field-value {
+        font-size: 20px;
+        color: #6f7680;
+        padding: 6px 8px 14px;
+        border-bottom: 4px solid #4d5c4f;
+        min-height: 40px;
+        word-break: break-word;
+    }
+
+    .full-fields {
+        margin-top: 10px;
+    }
+
+    .price-value {
+        color: #8f2f24;
+        font-weight: 900;
+        font-size: 26px;
     }
 
     .status-visible {
-        color: green;
+        color: #1f8a3b;
         font-weight: 900;
     }
 
     .status-hidden {
-        color: red;
+        color: #c0392b;
         font-weight: 900;
     }
 
-    .admin-actions {
-        margin-top: 25px;
+    .button-row {
+        margin-top: 40px;
         display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 18px;
         flex-wrap: wrap;
-        gap: 12px;
     }
 
-    .admin-btn {
-        border: none;
-        border-radius: 10px;
-        padding: 11px 20px;
-        font-size: 15px;
+    .button-left,
+    .button-right {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 14px;
+        align-items: center;
+    }
+
+    .hoso-btn {
+        min-width: 140px;
+        height: 56px;
+        padding: 0 24px;
+        border: 4px solid #4d5c4f;
+        background: transparent;
+        color: #26404a;
+        font-size: 18px;
         font-weight: 900;
         text-transform: uppercase;
         text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
         cursor: pointer;
-        display: inline-block;
-    }
-
-    .edit-btn {
-        background-color: #0d6efd;
-        color: white;
-    }
-
-    .hide-btn {
-        background-color: #6c757d;
-        color: white;
-    }
-
-    .delete-btn {
-        background-color: #dc3545;
-        color: white;
+        transition: all 0.2s ease;
+        font-family: 'Merriweather', 'Noto Serif Display', 'Be Vietnam Pro', serif;
     }
 
     .back-btn {
-        background-color: #3b2a20;
+        background: transparent;
+        color: #26404a;
+    }
+
+        .back-btn:hover {
+            background: #e9e3d7;
+            color: #26404a;
+        }
+
+    .edit-btn {
+        background: #2f6fed;
+        border-color: #2f6fed;
         color: white;
     }
 
-    .admin-btn:hover {
-        opacity: 0.9;
+        .edit-btn:hover {
+            background: #1f55bd;
+            color: white;
+        }
+
+    .delete-btn {
+        background: #dc3545;
+        border-color: #dc3545;
         color: white;
     }
 
-    @@media (max-width: 768px) {
-        .admin-detail-card {
+        .delete-btn:hover {
+            background: #b92a37;
+            color: white;
+        }
+
+    .hide-btn {
+        background: #6c757d;
+        border-color: #6c757d;
+        color: white;
+    }
+
+        .hide-btn:hover {
+            background: #565e64;
+            border-color: #565e64;
+            color: white;
+        }
+
+    .inline-form {
+        display: inline-block;
+        margin: 0;
+    }
+
+    @@media (max-width: 850px) {
+        .hoso-sheet {
+            padding: 26px 20px 38px;
+        }
+
+        .stamp-box {
+            position: static;
+            transform: rotate(0deg);
+            display: inline-block;
+            margin-bottom: 18px;
+        }
+
+        .hoso-title {
+            font-size: 34px;
+        }
+
+        .top-info-area {
             grid-template-columns: 1fr;
         }
 
-        .admin-detail-page {
-            padding: 25px 18px;
+        .image-box {
+            height: 260px;
+        }
+
+        .field-label {
+            font-size: 18px;
+        }
+
+        .field-value {
+            font-size: 18px;
+        }
+
+        .button-row {
+            flex-direction: column;
+            align-items: stretch;
+        }
+
+        .button-left,
+        .button-right {
+            width: 100%;
+            justify-content: center;
+        }
+
+        .hoso-btn {
+            min-width: 130px;
         }
     }
 </style>
 
-<div class="admin-detail-page">
-    <div class="admin-detail-card">
-        <div class="admin-image-box">
-            @if (!string.IsNullOrWhiteSpace(imagePath))
-            {
-                <img src="@imagePath" alt="@Model.TenSP" />
-            }
-            else
-            {
-                <span>Chưa có ảnh sản phẩm</span>
-            }
+<div class="hoso-page">
+    <div class="hoso-sheet">
+        <div class="stamp-box">Phiếu sản phẩm</div>
+
+        <div class="hoso-title">Chi tiết sản phẩm</div>
+        <div class="hoso-line"></div>
+
+        <div class="top-info-area">
+            <div class="image-section">
+                <label class="image-label">Hình ảnh sản phẩm:</label>
+
+                <div class="image-box">
+                    @if (!string.IsNullOrWhiteSpace(imagePath))
+                    {
+                        <img src="@imagePath" alt="@Model.TenSP" />
+                    }
+                    else
+                    {
+                        <div class="no-image">Chưa có ảnh sản phẩm</div>
+                    }
+                </div>
+            </div>
+
+            <div class="top-fields">
+                <div class="field-group">
+                    <label class="field-label">Tên sản phẩm:</label>
+                    <div class="field-value">@Model.TenSP</div>
+                </div>
+
+                <div class="field-group">
+                    <label class="field-label">Mã sản phẩm:</label>
+                    <div class="field-value">@Model.MaSP</div>
+                </div>
+            </div>
         </div>
 
-        <div class="admin-info">
-            <h2>@Model.TenSP</h2>
-
-            <div class="info-line">
-                Mã sản phẩm: @Model.MaSP
+        <div class="full-fields">
+            <div class="field-group">
+                <label class="field-label">Danh mục:</label>
+                <div class="field-value">@(Model.DanhMuc?.TenDanhMuc ?? "Chưa có danh mục")</div>
             </div>
 
-            <div class="info-line">
-                Danh mục: @(Model.DanhMuc?.TenDanhMuc ?? "Chưa có danh mục")
+            <div class="field-group">
+                <label class="field-label">Giá bán (VNĐ):</label>
+                <div class="field-value price-value">@Model.Gia.ToString("N0")</div>
             </div>
 
-            <div class="price-box">
-                @Model.Gia.ToString("N0") Đ
+            <div class="field-group">
+                <label class="field-label">Trạng thái:</label>
+                <div class="field-value">
+                    @if (Model.IsAn)
+                    {
+                        <span class="status-hidden">Đang ẩn</span>
+                    }
+                    else
+                    {
+                        <span class="status-visible">Đang hiển thị</span>
+                    }
+                </div>
             </div>
+        </div>
 
-            <div class="info-line">
-                Trạng thái:
-                @if (Model.IsAn)
-                {
-                    <span class="status-hidden">Đang ẩn</span>
-                }
-                else
-                {
-                    <span class="status-visible">Đang hiển thị</span>
-                }
-            </div>
+        <div class="button-row">
+            <div class="button-left">
+                <a asp-controller="Admin"
+                   asp-action="Index"
+                   class="hoso-btn back-btn">
+                    ← Trở về
+                </a>
 
-            <div class="admin-actions">
                 <a asp-controller="Admin"
                    asp-action="Edit"
                    asp-route-id="@Model.MaSP"
-                   class="admin-btn edit-btn">
+                   class="hoso-btn edit-btn">
                     Sửa
                 </a>
-
-                <form asp-controller="Admin"
-                      asp-action="AnHien"
-                      asp-route-id="@Model.MaSP"
-                      method="post">
-                    @Html.AntiForgeryToken()
-
-                    <button type="submit" class="admin-btn hide-btn">
-                        @(Model.IsAn ? "Hiện sản phẩm" : "Ẩn sản phẩm")
-                    </button>
-                </form>
 
                 <a asp-controller="Admin"
                    asp-action="Delete"
                    asp-route-id="@Model.MaSP"
-                   class="admin-btn delete-btn">
+                   class="hoso-btn delete-btn">
                     Xóa
                 </a>
+            </div>
 
-                <a asp-controller="Admin"
-                   asp-action="Index"
-                   class="admin-btn back-btn">
-                    Quay lại
-                </a>
+            <div class="button-right">
+                <form asp-controller="Admin"
+                      asp-action="AnHien"
+                      asp-route-id="@Model.MaSP"
+                      method="post"
+                      class="inline-form">
+                    @Html.AntiForgeryToken()
+
+                    <button type="submit" class="hoso-btn hide-btn">
+                        @(Model.IsAn ? "Hiện sản phẩm" : "Ẩn sản phẩm")
+                    </button>
+                </form>
             </div>
         </div>
     </div>

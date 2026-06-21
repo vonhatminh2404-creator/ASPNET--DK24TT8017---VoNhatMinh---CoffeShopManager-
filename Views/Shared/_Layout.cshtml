@@ -263,19 +263,32 @@
                 }
             </div>
 
-            @if (User.Identity != null && User.Identity.IsAuthenticated)
+            @if (User.Identity != null && User.Identity.IsAuthenticated && User.IsInRole("Admin"))
             {
                 <div class="menu-bottom">
+                    <a asp-controller="Admin" asp-action="Index" class="order-btn">
+                        QUẢN LÝ SẢN PHẨM
+                    </a>
+
                     <a asp-controller="DonHang" asp-action="Index" class="order-btn">
                         ĐƠN HÀNG
-
-                        @if (soLuongDon > 0)
-                        {
-                            <span class="order-badge">@soLuongDon</span>
-                        }
                     </a>
                 </div>
             }
+
+            @if (User.Identity != null && User.Identity.IsAuthenticated && User.IsInRole("User"))
+            {
+                <div class="menu-bottom">
+                    <a asp-controller="GioHang" asp-action="Index" class="order-btn">
+                        GIỎ HÀNG
+                    </a>
+
+                    <a asp-controller="DonHang" asp-action="CuaToi" class="order-btn">
+                        ĐƠN HÀNG CỦA TÔI
+                    </a>
+                </div>
+            }
+
         </nav>
     </header>
 

@@ -19,6 +19,9 @@ namespace CoffeeShopManager.Models
         [Required]
         public string MatKhauHash { get; set; } = "";
 
+        // Chỉ dùng 2 vai trò: User hoặc Admin
+        [Required]
+        [StringLength(20)]
         public string VaiTro { get; set; } = "User";
     }
 }
