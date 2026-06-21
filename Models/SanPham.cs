@@ -24,6 +24,7 @@ namespace CoffeeShopManager.Models
         [ForeignKey("MaDanhMuc")]
         public virtual DanhMuc? DanhMuc { get; set; }
 
+        // false = đang hiển thị, true = đang ẩn
         public bool IsAn { get; set; } = false;
     }
 }

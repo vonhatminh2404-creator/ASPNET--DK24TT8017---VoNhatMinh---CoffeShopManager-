@@ -289,6 +289,29 @@
         border: 2px solid #d1a856;
     }
 
+    .product-actions {
+        margin-top: 18px;
+    }
+
+    .detail-button {
+        display: inline-block;
+        background: linear-gradient(180deg, #5a3825, #2f1d14);
+        color: #fff8df;
+        padding: 12px 26px;
+        border-radius: 999px;
+        font-size: 17px;
+        font-weight: 900;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        text-decoration: none;
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.25);
+    }
+
+        .detail-button:hover {
+            background: linear-gradient(180deg, #7b3f20, #3b2a20);
+            color: white;
+        }
+
     @@media (max-width: 1100px) {
         .filter-form {
             grid-template-columns: 1fr 1fr;
@@ -450,9 +473,14 @@
                                 @Html.AntiForgeryToken()
                                 <input type="hidden" name="sanPhamId" value="@item.MaSP" />
 
-                                <button type="submit" class="note-button">
-                                    + Ghi Sổ
-                                </button>
+                                <div class="product-actions">
+                                    <a asp-controller="Home"
+                                       asp-action="Details"
+                                       asp-route-id="@item.MaSP"
+                                       class="detail-button">
+                                        Xem chi tiết
+                                    </a>
+                                </div>
                             </form>
                         </div>
                     }

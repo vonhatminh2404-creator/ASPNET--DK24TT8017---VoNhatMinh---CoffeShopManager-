@@ -17,9 +17,15 @@ public class AdminController : Controller
     }
 
     // GET: SANPHAMS
-    public async Task<IActionResult> Index()    
+    public async Task<IActionResult> Index()
     {
-        return View(await _context.SanPhams.ToListAsync());
+        var danhSachSanPham = await _context.SanPhams
+            .Include(s => s.DanhMuc)
+            .OrderBy(s => s.IsAn)
+            .ThenBy(s => s.TenSP)
+            .ToListAsync();
+
+        return View(danhSachSanPham);
     }
 
     // GET: SANPHAMS/Details/5
@@ -169,6 +175,7 @@ public class AdminController : Controller
     {
         return _context.SanPhams.Any(e => e.MaSP == masp);
     }
+
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> AnHien(int id)

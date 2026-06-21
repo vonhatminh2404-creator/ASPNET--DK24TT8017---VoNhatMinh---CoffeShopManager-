@@ -24,27 +24,24 @@ namespace CoffeeShopManager.Controllers
         {
             var query = _context.SanPhams
                 .Include(s => s.DanhMuc)
+                .Where(s => !s.IsAn)
                 .AsQueryable();
 
-            // Tìm kiếm theo tên sản phẩm
             if (!string.IsNullOrWhiteSpace(keyword))
             {
                 query = query.Where(s => s.TenSP != null && s.TenSP.Contains(keyword));
             }
 
-            // Lọc theo danh mục
             if (danhMucId.HasValue && danhMucId.Value > 0)
             {
                 query = query.Where(s => s.MaDanhMuc == danhMucId.Value);
             }
 
-            // Lọc giá từ
             if (giaTu.HasValue)
             {
                 query = query.Where(s => s.Gia >= giaTu.Value);
             }
 
-            // Lọc giá đến
             if (giaDen.HasValue)
             {
                 query = query.Where(s => s.Gia <= giaDen.Value);
@@ -72,6 +69,26 @@ namespace CoffeeShopManager.Controllers
             );
 
             return View(danhSachSanPham);
+        }
+
+        // User xem chi tiết sản phẩm
+        public async Task<IActionResult> Details(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var sanPham = await _context.SanPhams
+                .Include(s => s.DanhMuc)
+                .FirstOrDefaultAsync(s => s.MaSP == id && !s.IsAn);
+
+            if (sanPham == null)
+            {
+                return NotFound();
+            }
+
+            return View(sanPham);
         }
 
         public IActionResult Privacy()

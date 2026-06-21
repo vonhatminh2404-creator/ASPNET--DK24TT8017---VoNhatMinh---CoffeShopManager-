@@ -1,159 +1,226 @@
 ﻿@model CoffeeShopManager.Models.SanPham
 
 @{
-    ViewData["Title"] = "Hồ Sơ Món - BonFire Admin";
+    ViewData["Title"] = "Chi tiết sản phẩm";
+
+    var imagePath = "";
+
+    if (string.IsNullOrWhiteSpace(Model.HinhAnh))
+    {
+        imagePath = "";
+    }
+    else if (Model.HinhAnh.StartsWith("/") || Model.HinhAnh.StartsWith("http"))
+    {
+        imagePath = Model.HinhAnh;
+    }
+    else
+    {
+        imagePath = Url.Content("~/images/" + Model.HinhAnh);
+    }
 }
 
 <style>
-    @@import url('https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Playfair+Display:ital,wght@0,700;1,700&display=swap');
-
-    .details-container {
-        font-family: 'Courier Prime', monospace;
-        background-color: #F4F2EB; /* Màu kem đặc trưng */
-        border: 3px solid #36453B;
-        padding: 40px;
-        max-width: 800px;
-        margin: 50px auto;
-        position: relative;
+    .admin-detail-page {
+        min-height: 100vh;
+        padding: 45px 60px;
+        background-color: #f5efe5;
+        font-family: 'Merriweather', 'Noto Serif Display', 'Be Vietnam Pro', serif;
     }
 
-        /* Con dấu mộc chứng nhận bản gốc */
-        .details-container::before {
-            content: "HỒ SƠ GỐC";
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            border: 4px double #36453B;
-            color: #36453B;
-            padding: 5px 15px;
-            font-weight: bold;
-            transform: rotate(5deg);
-            opacity: 0.4;
-            letter-spacing: 2px;
+    .admin-detail-card {
+        max-width: 950px;
+        margin: 0 auto;
+        background: white;
+        border: 2px solid #d1a856;
+        border-radius: 22px;
+        padding: 30px;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 35px;
+        box-shadow: 0 12px 25px rgba(0,0,0,0.18);
+    }
+
+    .admin-image-box {
+        background-color: #fffaf0;
+        border: 1px solid #e2c98d;
+        border-radius: 18px;
+        height: 340px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+    }
+
+        .admin-image-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
 
-    .details-title {
-        font-family: 'Playfair Display', serif;
-        color: #36453B;
-        text-align: center;
+    .admin-info h2 {
+        color: #2f241d;
+        font-size: 32px;
+        font-weight: 900;
         text-transform: uppercase;
-        border-bottom: 2px dashed #36453B;
-        padding-bottom: 15px;
-        margin-bottom: 30px;
-        letter-spacing: 1px;
+        margin-bottom: 18px;
     }
 
-    .dossier-card {
+    .info-line {
+        margin-bottom: 12px;
+        font-size: 17px;
+        color: #3b2a20;
+        font-weight: 700;
+    }
+
+    .price-box {
+        display: inline-block;
+        background: #ffd84d;
+        color: #3b2a20;
+        border: 2px solid #7b3f20;
+        border-radius: 12px;
+        padding: 10px 20px;
+        font-size: 26px;
+        font-weight: 900;
+        margin: 15px 0;
+    }
+
+    .status-visible {
+        color: green;
+        font-weight: 900;
+    }
+
+    .status-hidden {
+        color: red;
+        font-weight: 900;
+    }
+
+    .admin-actions {
+        margin-top: 25px;
         display: flex;
         flex-wrap: wrap;
-        gap: 30px;
-        align-items: flex-start;
-        background-color: #EBE4D5;
-        padding: 30px;
-        border: 1px solid #36453B;
+        gap: 12px;
     }
 
-    .dossier-image {
-        flex: 1;
-        min-width: 250px;
-        text-align: center;
-    }
-
-        .dossier-image img {
-            width: 100%;
-            max-width: 300px;
-            height: auto;
-            aspect-ratio: 1/1;
-            object-fit: cover;
-            border: 4px solid #F4F2EB;
-            outline: 2px solid #36453B;
-            box-shadow: 5px 5px 0px rgba(54, 69, 59, 0.2);
-        }
-
-    .dossier-info {
-        flex: 2;
-        min-width: 300px;
-    }
-
-    .info-row {
-        margin-bottom: 15px;
-        border-bottom: 1px dotted #36453B;
-        padding-bottom: 8px;
-    }
-
-    .info-label {
-        font-weight: bold;
-        color: #8B2F29;
-        display: inline-block;
-        width: 140px;
+    .admin-btn {
+        border: none;
+        border-radius: 10px;
+        padding: 11px 20px;
+        font-size: 15px;
+        font-weight: 900;
         text-transform: uppercase;
-        font-size: 0.9rem;
-    }
-
-    .info-data {
-        color: #2C2C2C;
-        font-size: 1.1rem;
-        font-weight: bold;
-    }
-
-    .cong-btn {
-        background-color: transparent;
-        border: 2px solid #36453B;
-        color: #36453B;
-        font-weight: bold;
-        text-transform: uppercase;
-        padding: 10px 25px;
         text-decoration: none;
-        display: inline-block;
-        transition: all 0.3s;
         cursor: pointer;
+        display: inline-block;
     }
 
-    .cong-btn-warning {
-        background-color: #d4a017;
-        color: #F4F2EB;
-        border-color: #d4a017;
+    .edit-btn {
+        background-color: #0d6efd;
+        color: white;
     }
 
-        .cong-btn-warning:hover {
-            background-color: #b58812;
-            border-color: #b58812;
+    .hide-btn {
+        background-color: #6c757d;
+        color: white;
+    }
+
+    .delete-btn {
+        background-color: #dc3545;
+        color: white;
+    }
+
+    .back-btn {
+        background-color: #3b2a20;
+        color: white;
+    }
+
+    .admin-btn:hover {
+        opacity: 0.9;
+        color: white;
+    }
+
+    @@media (max-width: 768px) {
+        .admin-detail-card {
+            grid-template-columns: 1fr;
         }
+
+        .admin-detail-page {
+            padding: 25px 18px;
+        }
+    }
 </style>
 
-<div class="container">
-    <div class="details-container shadow">
-        <h2 class="details-title">TRÍCH LỤC HỒ SƠ</h2>
-
-        <div class="dossier-card">
-            <div class="dossier-image">
-                <img src="@(string.IsNullOrEmpty(Model.HinhAnh) ? "https://via.placeholder.com/300?text=Chua+Co+Anh" : Model.HinhAnh)"
-                     alt="@Model.TenSP" />
-            </div>
-
-            <div class="dossier-info">
-                <div class="info-row">
-                    <span class="info-label">Mã Định Danh:</span>
-                    <span class="info-data">#@Model.MaSP</span>
-                </div>
-                <div class="info-row">
-                    <span class="info-label">Tên Gọi:</span>
-                    <span class="info-data" style="color: #36453B; font-size: 1.3rem;">@Model.TenSP</span>
-                </div>
-                <div class="info-row">
-                    <span class="info-label">Thuộc Nhóm:</span>
-                    <span class="info-data">@(Model.DanhMuc != null ? Model.DanhMuc.TenDanhMuc : "Đang cập nhật")</span>
-                </div>
-                <div class="info-row">
-                    <span class="info-label">Mức Giá:</span>
-                    <span class="info-data" style="color: #8B2F29;">@Model.Gia.ToString("N0") VNĐ</span>
-                </div>
-            </div>
+<div class="admin-detail-page">
+    <div class="admin-detail-card">
+        <div class="admin-image-box">
+            @if (!string.IsNullOrWhiteSpace(imagePath))
+            {
+                <img src="@imagePath" alt="@Model.TenSP" />
+            }
+            else
+            {
+                <span>Chưa có ảnh sản phẩm</span>
+            }
         </div>
 
-        <div class="d-flex justify-content-between align-items-center mt-4">
-            <a asp-action="Index" class="cong-btn">← ĐÓNG HỒ SƠ</a>
-            <a asp-action="Edit" asp-route-id="@Model.MaSP" class="cong-btn cong-btn-warning">CHỈNH SỬA LẠI ✎</a>
+        <div class="admin-info">
+            <h2>@Model.TenSP</h2>
+
+            <div class="info-line">
+                Mã sản phẩm: @Model.MaSP
+            </div>
+
+            <div class="info-line">
+                Danh mục: @(Model.DanhMuc?.TenDanhMuc ?? "Chưa có danh mục")
+            </div>
+
+            <div class="price-box">
+                @Model.Gia.ToString("N0") Đ
+            </div>
+
+            <div class="info-line">
+                Trạng thái:
+                @if (Model.IsAn)
+                {
+                    <span class="status-hidden">Đang ẩn</span>
+                }
+                else
+                {
+                    <span class="status-visible">Đang hiển thị</span>
+                }
+            </div>
+
+            <div class="admin-actions">
+                <a asp-controller="Admin"
+                   asp-action="Edit"
+                   asp-route-id="@Model.MaSP"
+                   class="admin-btn edit-btn">
+                    Sửa
+                </a>
+
+                <form asp-controller="Admin"
+                      asp-action="AnHien"
+                      asp-route-id="@Model.MaSP"
+                      method="post">
+                    @Html.AntiForgeryToken()
+
+                    <button type="submit" class="admin-btn hide-btn">
+                        @(Model.IsAn ? "Hiện sản phẩm" : "Ẩn sản phẩm")
+                    </button>
+                </form>
+
+                <a asp-controller="Admin"
+                   asp-action="Delete"
+                   asp-route-id="@Model.MaSP"
+                   class="admin-btn delete-btn">
+                    Xóa
+                </a>
+
+                <a asp-controller="Admin"
+                   asp-action="Index"
+                   class="admin-btn back-btn">
+                    Quay lại
+                </a>
+            </div>
         </div>
     </div>
 </div>

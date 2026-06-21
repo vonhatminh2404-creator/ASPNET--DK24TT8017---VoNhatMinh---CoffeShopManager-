@@ -1,0 +1,171 @@
+﻿@model CoffeeShopManager.Models.SanPham
+
+@{
+    ViewData["Title"] = "Chi tiết sản phẩm";
+
+    var imagePath = "";
+
+    if (string.IsNullOrWhiteSpace(Model.HinhAnh))
+    {
+        imagePath = "";
+    }
+    else if (Model.HinhAnh.StartsWith("/") || Model.HinhAnh.StartsWith("http"))
+    {
+        imagePath = Model.HinhAnh;
+    }
+    else
+    {
+        imagePath = Url.Content("~/images/" + Model.HinhAnh);
+    }
+}
+
+<style>
+    .detail-page {
+        min-height: 100vh;
+        padding: 45px 60px;
+        background-color: #6f6259;
+        font-family: 'Merriweather', 'Noto Serif Display', 'Be Vietnam Pro', serif;
+    }
+
+    .detail-card {
+        max-width: 950px;
+        margin: 0 auto;
+        background: linear-gradient(180deg, #f8f1df 0%, #efe2c5 100%);
+        border: 2px solid #d1a856;
+        border-radius: 24px;
+        padding: 32px;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 35px;
+        box-shadow: 0 14px 30px rgba(0,0,0,0.3);
+    }
+
+    .detail-image-box {
+        background-color: #fffaf0;
+        border: 1px solid #e2c98d;
+        border-radius: 18px;
+        height: 350px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+    }
+
+        .detail-image-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+    .no-image {
+        color: #8b6f47;
+        font-weight: 900;
+    }
+
+    .detail-info h2 {
+        color: #2f241d;
+        font-size: 34px;
+        font-weight: 900;
+        text-transform: uppercase;
+        margin-bottom: 18px;
+    }
+
+    .category-name {
+        color: #7b3f20;
+        font-size: 18px;
+        font-weight: 800;
+        margin-bottom: 18px;
+    }
+
+    .price-box {
+        display: inline-block;
+        background: linear-gradient(180deg, #ffd84d, #e7a90c);
+        color: #3b2a20;
+        border: 2px solid #7b3f20;
+        border-radius: 14px;
+        padding: 12px 24px;
+        font-size: 30px;
+        font-weight: 900;
+        margin-bottom: 28px;
+    }
+
+    .cart-btn {
+        border: none;
+        background: linear-gradient(180deg, #5a3825, #2f1d14);
+        color: #fff8df;
+        padding: 13px 30px;
+        border-radius: 999px;
+        font-size: 18px;
+        font-weight: 900;
+        text-transform: uppercase;
+        cursor: pointer;
+        text-decoration: none;
+        display: inline-block;
+    }
+
+        .cart-btn:hover {
+            background: linear-gradient(180deg, #7b3f20, #3b2a20);
+            color: white;
+        }
+
+    .back-link {
+        display: inline-block;
+        margin-top: 22px;
+        color: #3b2a20;
+        font-weight: 900;
+        text-decoration: none;
+    }
+
+        .back-link:hover {
+            color: #7b3f20;
+        }
+
+    @@media (max-width: 768px) {
+        .detail-card {
+            grid-template-columns: 1fr;
+        }
+
+        .detail-page {
+            padding: 25px 18px;
+        }
+    }
+</style>
+
+<div class="detail-page">
+    <div class="detail-card">
+        <div class="detail-image-box">
+            @if (!string.IsNullOrWhiteSpace(imagePath))
+            {
+                <img src="@imagePath" alt="@Model.TenSP" />
+            }
+            else
+            {
+                <span class="no-image">Chưa có ảnh sản phẩm</span>
+            }
+        </div>
+
+        <div class="detail-info">
+            <h2>@Model.TenSP</h2>
+
+            <div class="category-name">
+                Danh mục: @(Model.DanhMuc?.TenDanhMuc ?? "Chưa có danh mục")
+            </div>
+
+            <div class="price-box">
+                @Model.Gia.ToString("N0") Đ
+            </div>
+
+            <form asp-controller="GioHang" asp-action="ThemVaoGio" method="post">
+                @Html.AntiForgeryToken()
+                <input type="hidden" name="id" value="@Model.MaSP" />
+                <button type="submit" class="cart-btn">
+                    + Thêm vào giỏ hàng
+                </button>
+            </form>
+
+            <a asp-controller="Home" asp-action="Index" class="back-link">
+                ← Quay lại thực đơn
+            </a>
+        </div>
+    </div>
+</div>
