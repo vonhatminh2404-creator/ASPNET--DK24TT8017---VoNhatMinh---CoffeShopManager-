@@ -1,0 +1,241 @@
+﻿@model CoffeeShopManager.Models.DanhMuc
+
+@{
+    ViewData["Title"] = "Chi tiết danh mục";
+}
+
+<style>
+    .detail-page {
+        min-height: 100vh;
+        background: #f5f1e8;
+        padding: 45px 30px 70px;
+        font-family: 'Merriweather', 'Noto Serif Display', 'Be Vietnam Pro', serif;
+    }
+
+    .detail-sheet {
+        max-width: 1000px;
+        margin: 0 auto;
+        background: #f8f6ef;
+        border: 4px solid #4d5c4f;
+        padding: 36px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+    }
+
+    .detail-title {
+        text-align: center;
+        color: #8f2f24;
+        font-size: 42px;
+        font-weight: 900;
+        text-transform: uppercase;
+        margin-bottom: 18px;
+    }
+
+    .detail-line {
+        border-bottom: 4px dashed #8f2f24;
+        margin: 0 auto 30px;
+        width: 92%;
+    }
+
+    .info-row {
+        margin-bottom: 24px;
+    }
+
+    .info-label {
+        color: #28404a;
+        font-size: 19px;
+        font-weight: 900;
+        margin-bottom: 8px;
+    }
+
+    .info-value {
+        color: #6f7680;
+        font-size: 18px;
+        font-weight: 800;
+        border-bottom: 3px solid #4d5c4f;
+        padding: 8px 6px 12px;
+        min-height: 42px;
+    }
+
+    .product-title {
+        margin-top: 34px;
+        color: #28404a;
+        font-size: 24px;
+        font-weight: 900;
+        text-transform: uppercase;
+    }
+
+    .product-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 16px;
+    }
+
+        .product-table th {
+            background: #3d5343;
+            color: white;
+            padding: 12px;
+            text-align: center;
+            text-transform: uppercase;
+        }
+
+        .product-table td {
+            border-bottom: 3px solid #4d5c4f;
+            padding: 14px 8px;
+            text-align: center;
+            font-weight: 800;
+            color: #28404a;
+        }
+
+    .price-text {
+        color: #8f2f24;
+        font-weight: 900;
+        white-space: nowrap;
+    }
+
+    .status-hidden {
+        color: #dc3545;
+        font-weight: 900;
+    }
+
+    .status-visible {
+        color: #1f7a3b;
+        font-weight: 900;
+    }
+
+    .button-row {
+        margin-top: 32px;
+        display: flex;
+        gap: 14px;
+        flex-wrap: wrap;
+    }
+
+    .back-btn,
+    .edit-btn,
+    .delete-btn {
+        min-width: 150px;
+        height: 52px;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 900;
+        text-transform: uppercase;
+        border-radius: 6px;
+    }
+
+    .back-btn {
+        border: 4px solid #4d5c4f;
+        color: #26404a;
+        background: transparent;
+    }
+
+        .back-btn:hover {
+            background: #e9e3d7;
+            color: #26404a;
+        }
+
+    .edit-btn {
+        background: #2f6fed;
+        color: white;
+    }
+
+    .delete-btn {
+        background: #dc3545;
+        color: white;
+    }
+
+        .edit-btn:hover,
+        .delete-btn:hover {
+            opacity: 0.88;
+            color: white;
+        }
+</style>
+
+<div class="detail-page">
+    <div class="detail-sheet">
+        <h1 class="detail-title">Chi tiết danh mục</h1>
+        <div class="detail-line"></div>
+
+        <div class="info-row">
+            <div class="info-label">Mã danh mục:</div>
+            <div class="info-value">#@Model.MaDanhMuc</div>
+        </div>
+
+        <div class="info-row">
+            <div class="info-label">Tên danh mục:</div>
+            <div class="info-value">@Model.TenDanhMuc</div>
+        </div>
+
+        <div class="info-row">
+            <div class="info-label">Mô tả:</div>
+            <div class="info-value">
+                @(string.IsNullOrWhiteSpace(Model.MoTa) ? "Chưa có mô tả" : Model.MoTa)
+            </div>
+        </div>
+
+        <div class="product-title">
+            Sản phẩm thuộc danh mục
+        </div>
+
+        @if (Model.SanPhams != null && Model.SanPhams.Any())
+        {
+            <table class="product-table">
+                <thead>
+                    <tr>
+                        <th>Mã SP</th>
+                        <th>Tên sản phẩm</th>
+                        <th>Giá</th>
+                        <th>Trạng thái</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @foreach (var sp in Model.SanPhams)
+                    {
+                        <tr>
+                            <td>#@sp.MaSP</td>
+                            <td>@sp.TenSP</td>
+                            <td class="price-text">@sp.Gia.ToString("N0") Đ</td>
+                            <td>
+                                @if (sp.IsAn)
+                                {
+                                    <span class="status-hidden">Đang ẩn</span>
+                                }
+                                else
+                                {
+                                    <span class="status-visible">Đang hiển thị</span>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <p style="font-weight:900; color:#777;">
+                Danh mục này chưa có sản phẩm nào.
+            </p>
+        }
+
+        <div class="button-row">
+            <a asp-controller="DanhMuc" asp-action="Index" class="back-btn">
+                ← Trở về
+            </a>
+
+            <a asp-controller="DanhMuc"
+               asp-action="Edit"
+               asp-route-id="@Model.MaDanhMuc"
+               class="edit-btn">
+                Sửa
+            </a>
+
+            <a asp-controller="DanhMuc"
+               asp-action="Delete"
+               asp-route-id="@Model.MaDanhMuc"
+               class="delete-btn">
+                Xóa
+            </a>
+        </div>
+    </div>
+</div>

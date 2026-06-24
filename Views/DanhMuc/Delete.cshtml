@@ -1,0 +1,208 @@
+﻿@model CoffeeShopManager.Models.DanhMuc
+
+@{
+    ViewData["Title"] = "Xóa danh mục";
+
+    int soSanPham = Model.SanPhams == null ? 0 : Model.SanPhams.Count;
+}
+
+<style>
+    .delete-page {
+        min-height: 100vh;
+        background: #f5f1e8;
+        padding: 45px 30px 70px;
+        font-family: 'Merriweather', 'Noto Serif Display', 'Be Vietnam Pro', serif;
+    }
+
+    .delete-sheet {
+        max-width: 850px;
+        margin: 0 auto;
+        background: #f8f6ef;
+        border: 4px solid #4d5c4f;
+        padding: 36px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+    }
+
+    .delete-title {
+        text-align: center;
+        color: #dc3545;
+        font-size: 42px;
+        font-weight: 900;
+        text-transform: uppercase;
+        margin-bottom: 18px;
+    }
+
+    .delete-line {
+        border-bottom: 4px dashed #dc3545;
+        margin: 0 auto 30px;
+        width: 92%;
+    }
+
+    .warning-box {
+        background: #fdecea;
+        border: 3px solid #dc3545;
+        color: #b42318;
+        padding: 18px;
+        font-weight: 900;
+        margin-bottom: 24px;
+        text-align: center;
+    }
+
+    .error-message {
+        background: #fdecea;
+        color: #b42318;
+        border: 2px solid #b42318;
+        padding: 14px 18px;
+        margin-bottom: 24px;
+        font-weight: 900;
+    }
+
+    .info-row {
+        margin-bottom: 22px;
+    }
+
+    .info-label {
+        color: #28404a;
+        font-size: 19px;
+        font-weight: 900;
+        margin-bottom: 8px;
+    }
+
+    .info-value {
+        color: #6f7680;
+        font-size: 18px;
+        font-weight: 800;
+        border-bottom: 3px solid #4d5c4f;
+        padding: 8px 6px 12px;
+        min-height: 42px;
+    }
+
+    .button-row {
+        margin-top: 34px;
+        display: flex;
+        justify-content: space-between;
+        gap: 16px;
+        flex-wrap: wrap;
+    }
+
+    .back-btn,
+    .delete-btn {
+        min-width: 170px;
+        height: 54px;
+        border: 4px solid #4d5c4f;
+        font-size: 18px;
+        font-weight: 900;
+        text-transform: uppercase;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+    }
+
+    .back-btn {
+        color: #26404a;
+        background: transparent;
+    }
+
+        .back-btn:hover {
+            background: #e9e3d7;
+            color: #26404a;
+        }
+
+    .delete-btn {
+        background: #dc3545;
+        border-color: #dc3545;
+        color: white;
+    }
+
+        .delete-btn:hover {
+            background: #b92a37;
+        }
+
+    .delete-btn-disabled {
+        background: #999;
+        border-color: #999;
+        cursor: not-allowed;
+        opacity: 0.8;
+    }
+</style>
+
+<div class="delete-page">
+    <div class="delete-sheet">
+        <h1 class="delete-title">Xóa danh mục</h1>
+        <div class="delete-line"></div>
+
+        @if (TempData["Error"] != null)
+        {
+            <div class="error-message">
+                @TempData["Error"]
+            </div>
+        }
+
+        @if (soSanPham > 0)
+        {
+            <div class="warning-box">
+                Không thể xóa danh mục này vì đang có @soSanPham sản phẩm thuộc danh mục.
+                <br />
+                Bạn cần chuyển hoặc xóa sản phẩm trước.
+            </div>
+        }
+        else
+        {
+            <div class="warning-box">
+                Bạn có chắc chắn muốn xóa danh mục này không?
+            </div>
+        }
+
+        <div class="info-row">
+            <div class="info-label">Mã danh mục:</div>
+            <div class="info-value">#@Model.MaDanhMuc</div>
+        </div>
+
+        <div class="info-row">
+            <div class="info-label">Tên danh mục:</div>
+            <div class="info-value">@Model.TenDanhMuc</div>
+        </div>
+
+        <div class="info-row">
+            <div class="info-label">Mô tả:</div>
+            <div class="info-value">
+                @(string.IsNullOrWhiteSpace(Model.MoTa) ? "Chưa có mô tả" : Model.MoTa)
+            </div>
+        </div>
+
+        <div class="info-row">
+            <div class="info-label">Số sản phẩm thuộc danh mục:</div>
+            <div class="info-value">@soSanPham</div>
+        </div>
+
+        <div class="button-row">
+            <a asp-controller="DanhMuc" asp-action="Index" class="back-btn">
+                ← Trở về
+            </a>
+
+            <form asp-controller="DanhMuc"
+                  asp-action="Delete"
+                  asp-route-id="@Model.MaDanhMuc"
+                  method="post">
+                @Html.AntiForgeryToken()
+
+                @if (soSanPham > 0)
+                {
+                    <button type="button" class="delete-btn delete-btn-disabled" disabled>
+                        Không thể xóa
+                    </button>
+                }
+                else
+                {
+                    <button type="submit"
+                            class="delete-btn"
+                            onclick="return confirm('Bạn có chắc chắn muốn xóa danh mục này không?');">
+                        Xác nhận xóa
+                    </button>
+                }
+            </form>
+        </div>
+    </div>
+</div>

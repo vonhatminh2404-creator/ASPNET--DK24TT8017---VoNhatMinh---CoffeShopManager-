@@ -1,0 +1,295 @@
+﻿@model IEnumerable<CoffeeShopManager.Models.NguoiDung>
+
+@{
+    ViewData["Title"] = "Quản lý người dùng";
+
+    int currentAdminId = 0;
+
+    if (ViewBag.CurrentAdminId != null)
+    {
+        currentAdminId = (int)ViewBag.CurrentAdminId;
+    }
+}
+
+<style>
+    .user-page {
+        min-height: 100vh;
+        background: #f5f1e8;
+        padding: 45px 30px 70px;
+        font-family: 'Merriweather', 'Noto Serif Display', 'Be Vietnam Pro', serif;
+    }
+
+    .user-sheet {
+        max-width: 1150px;
+        margin: 0 auto;
+        background: #f8f6ef;
+        border: 4px solid #4d5c4f;
+        padding: 36px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+    }
+
+    .user-title {
+        text-align: center;
+        color: #8f2f24;
+        font-size: 44px;
+        font-weight: 900;
+        text-transform: uppercase;
+        margin-bottom: 18px;
+    }
+
+    .user-line {
+        border-bottom: 4px dashed #8f2f24;
+        margin: 0 auto 30px;
+        width: 92%;
+    }
+
+    .success-message {
+        background: #e6f4ea;
+        color: #1f7a3b;
+        border: 2px solid #1f7a3b;
+        padding: 14px 18px;
+        margin-bottom: 24px;
+        font-weight: 900;
+    }
+
+    .error-message {
+        background: #fdecea;
+        color: #b42318;
+        border: 2px solid #b42318;
+        padding: 14px 18px;
+        margin-bottom: 24px;
+        font-weight: 900;
+    }
+
+    .top-actions {
+        display: flex;
+        justify-content: space-between;
+        gap: 14px;
+        flex-wrap: wrap;
+        margin-bottom: 24px;
+    }
+
+    .user-btn {
+        min-width: 190px;
+        height: 52px;
+        border: 4px solid #4d5c4f;
+        color: #26404a;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 900;
+        text-transform: uppercase;
+        background: transparent;
+    }
+
+        .user-btn:hover {
+            background: #e9e3d7;
+            color: #26404a;
+        }
+
+    .table-wrap {
+        width: 100%;
+        overflow-x: auto;
+    }
+
+    .user-table {
+        width: 100%;
+        border-collapse: collapse;
+        min-width: 900px;
+    }
+
+        .user-table th {
+            background: #3d5343;
+            color: white;
+            padding: 14px;
+            text-align: center;
+            text-transform: uppercase;
+            font-size: 15px;
+        }
+
+        .user-table td {
+            border-bottom: 3px solid #4d5c4f;
+            padding: 16px 10px;
+            text-align: center;
+            color: #28404a;
+            font-weight: 800;
+            vertical-align: middle;
+        }
+
+    .role-badge {
+        display: inline-block;
+        padding: 8px 14px;
+        border-radius: 999px;
+        font-weight: 900;
+        background: #e7f1ff;
+        color: #0b5ed7;
+        border: 1px solid #0b5ed7;
+    }
+
+    .role-admin {
+        background: #fdecea;
+        color: #b42318;
+        border-color: #b42318;
+    }
+
+    .self-badge {
+        display: inline-block;
+        margin-left: 6px;
+        padding: 5px 9px;
+        border-radius: 999px;
+        background: #fff3cd;
+        color: #856404;
+        border: 1px solid #d6a700;
+        font-size: 12px;
+        font-weight: 900;
+    }
+
+    .action-btn {
+        display: inline-block;
+        padding: 9px 14px;
+        margin: 2px;
+        color: white;
+        text-decoration: none;
+        font-weight: 900;
+        border-radius: 6px;
+        white-space: nowrap;
+    }
+
+    .detail-btn {
+        background: #3d5343;
+    }
+
+    .edit-btn {
+        background: #2f6fed;
+    }
+
+    .delete-btn {
+        background: #dc3545;
+    }
+
+    .action-btn:hover {
+        opacity: 0.88;
+        color: white;
+    }
+
+    .empty-text {
+        text-align: center;
+        color: #28404a;
+        font-size: 22px;
+        font-weight: 900;
+        padding: 35px;
+    }
+</style>
+
+<div class="user-page">
+    <div class="user-sheet">
+        <h1 class="user-title">Quản lý người dùng</h1>
+        <div class="user-line"></div>
+
+        @if (TempData["Success"] != null)
+        {
+            <div class="success-message">
+                @TempData["Success"]
+            </div>
+        }
+
+        @if (TempData["Error"] != null)
+        {
+            <div class="error-message">
+                @TempData["Error"]
+            </div>
+        }
+
+        <div class="top-actions">
+            <a asp-controller="Admin" asp-action="Dashboard" class="user-btn">
+                ← Dashboard
+            </a>
+
+            <a asp-controller="Home" asp-action="Index" class="user-btn">
+                Về trang chủ
+            </a>
+        </div>
+
+        @if (Model == null || !Model.Any())
+        {
+            <div class="empty-text">
+                Chưa có người dùng nào.
+            </div>
+        }
+        else
+        {
+            <div class="table-wrap">
+                <table class="user-table">
+                    <thead>
+                        <tr>
+                            <th>Mã</th>
+                            <th>Họ tên</th>
+                            <th>Email</th>
+                            <th>Vai trò</th>
+                            <th>Thao tác</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>#@item.MaNguoiDung</td>
+
+                                <td>
+                                    @item.HoTen
+
+                                    @if (item.MaNguoiDung == currentAdminId)
+                                    {
+                                        <span class="self-badge">Bạn</span>
+                                    }
+                                </td>
+
+                                <td>@item.Email</td>
+
+                                <td>
+                                    @if (item.VaiTro == "Admin")
+                                    {
+                                        <span class="role-badge role-admin">
+                                            Admin
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="role-badge">
+                                            User
+                                        </span>
+                                    }
+                                </td>
+
+                                <td>
+                                    <a asp-controller="NguoiDung"
+                                       asp-action="Details"
+                                       asp-route-id="@item.MaNguoiDung"
+                                       class="action-btn detail-btn">
+                                        Xem
+                                    </a>
+
+                                    <a asp-controller="NguoiDung"
+                                       asp-action="Edit"
+                                       asp-route-id="@item.MaNguoiDung"
+                                       class="action-btn edit-btn">
+                                        Sửa
+                                    </a>
+
+                                    <a asp-controller="NguoiDung"
+                                       asp-action="Delete"
+                                       asp-route-id="@item.MaNguoiDung"
+                                       class="action-btn delete-btn">
+                                        Xóa
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </div>
+</div>
